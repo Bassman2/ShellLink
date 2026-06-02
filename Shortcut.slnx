@@ -1,0 +1,10 @@
+<Solution>
+  <Folder Name="/Demo/">
+    <Project Path="Demo/ShortcutAnalyser/ShortcutAnalyser.csproj" Id="e3e49375-adaa-4d97-9588-ee4f71572091" />
+    <Project Path="Demo/ShortcutDemo/ShortcutDemo.csproj" />
+  </Folder>
+  <Folder Name="/Src/">
+    <Project Path="Src/Shortcut100/Shortcut100.csproj" Id="5a141d47-674e-4e9e-aeb9-5ed7aa6aa333" />
+    <Project Path="Src/ShortcutShare/ShortcutShare.shproj" Id="cb09c5a6-b436-4a62-beb7-dd8cf891886a" />
+  </Folder>
+</Solution>
