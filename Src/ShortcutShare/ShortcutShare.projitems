@@ -9,6 +9,9 @@
     <Import_RootNamespace>ShortcutShare</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)BinaryExtentions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FileAttributes.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LinkFlags.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Shortcut.cs" />
   </ItemGroup>
 </Project>
