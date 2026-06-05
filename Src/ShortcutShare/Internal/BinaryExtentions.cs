@@ -4,6 +4,56 @@ namespace ShortcutShare;
 
 internal static class BinaryExtentions
 {
+
+    public static string ReadString(this BinaryReader reader, bool isUnicode)
+    {
+        short length = reader.ReadInt16();
+        if (isUnicode)
+        {
+            var chars = new char[length / 2];
+            for (int i = 0; i < chars.Length; i++)
+            {
+                chars[i] = (char)reader.ReadInt16();
+            }
+            return new string(chars);
+        }
+        else
+        {
+            return new string(reader.ReadChars(length));
+        }
+    }
+
+    public static string ReadNullTerminatedString(this BinaryReader reader)
+    {
+        var chars = new List<char>();
+        while (true)
+        {
+            char c = reader.ReadChar();
+            if (c == '\0')
+            {
+                break;
+            }
+            chars.Add(c);
+        }
+        return new string(chars.ToArray());
+    }
+
+    public static string ReadNullTerminatedUnicodeString(this BinaryReader reader)
+    {
+        string  x = System.Text.Encoding.Unicode.GetString()
+        var chars = new List<char>();
+        while (true)
+        {
+            char c = reader.ReadChar();
+            if (c == '\0')
+            {
+                break;
+            }
+            chars.Add(c);
+        }
+        return new string(chars.ToArray());
+    }
+
     /// <summary>
     /// Reads a 16-byte GUID/UUID from the stream and converts it to a string.
     /// </summary>
@@ -75,4 +125,6 @@ internal static class BinaryExtentions
     {
         writer.Write(value.ToByteArray());
     }
+
+    
 }

@@ -9,10 +9,14 @@
     <Import_RootNamespace>ShortcutShare</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)CommonNetworkRelativeLinkFlags.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DriveType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Internal\BinaryExtentions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileAttributes.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Internal\FlagsExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LinkFlags.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LinkInfoFlags.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NetworkProviderType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Shortcut.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ShortcutException.cs" />
   </ItemGroup>

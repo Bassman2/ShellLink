@@ -94,6 +94,8 @@ public class Shortcut
 
         #endregion
 
+        #region LinkTargetIDList
+
         if (linkFlags.HasFlag(LinkFlags.HasLinkTargetIDList))
         {
             Console.WriteLine("LinkTargetIDList");
@@ -105,18 +107,129 @@ public class Shortcut
                 Console.WriteLine($"  itemIDSize: {itemIDSize}");
                 if (itemIDSize == 0) break;
 
-                reader.BaseStream.Seek(itemIDSize, SeekOrigin.Current);
+                reader.BaseStream.Seek(itemIDSize - 2, SeekOrigin.Current);
             }
         }
 
-        Console.WriteLine("LinkInfo");
-        Console.WriteLine($"  LinkInfoSize: {reader.ReadInt32()} bytes");
-        Console.WriteLine($"  LinkInfoHeaderSize: {reader.ReadInt32()} bytes");
+        #endregion
 
+        #region LinkInfo
+
+        Console.WriteLine("LinkInfo");
+        Console.WriteLine($"  LinkInfoSize: {reader.ReadInt32()}");
+        Console.WriteLine($"  LinkInfoHeaderSize: {reader.ReadInt32()}");
+
+        LinkInfoFlags linkInfoFlags = (LinkInfoFlags)reader.ReadInt32();
+        Console.WriteLine($"  LinkInfoFlags: {linkInfoFlags:X}");
+        Console.WriteLine(linkInfoFlags.ToDetailedString());
+
+        Console.WriteLine($"  VolumeIDOffset: {reader.ReadInt32()}");
+        Console.WriteLine($"  LocalBasePathOffset: {reader.ReadInt32()}");
+        Console.WriteLine($"  CommonNetworkRelativeLinkOffset: {reader.ReadInt32()}");
+        Console.WriteLine($"  CommonPathSuffixOffset: {reader.ReadInt32()}");
+        Console.WriteLine($"  LocalBasePathOffsetUnicode: {reader.ReadInt32()}");
+        Console.WriteLine($"  CommonPathSuffixOffsetUnicode: {reader.ReadInt32()}");
+
+        if (linkInfoFlags.HasFlag(LinkInfoFlags.VolumeIDAndLocalBasePath))
+        {
+            #region VolumeID
+            
+            Console.WriteLine($"  VolumeIDSize: {reader.ReadInt32()}");
+
+            DriveType driveType = (DriveType)reader.ReadInt32();
+            Console.WriteLine($"  DriveType: {driveType:X}");
+            Console.WriteLine(driveType.ToDetailedString());
+
+            Console.WriteLine($"  DriveSerialNumber: {reader.ReadInt32()}");
+            Console.WriteLine($"  VolumeLabelOffset: {reader.ReadInt32()}");
+            Console.WriteLine($"  VolumeLabelOffsetUnicode: {reader.ReadInt32()}");
+
+            // Data
+
+            #endregion
+
+            #region LocalBasePath
+
+            #endregion
+        }
+
+        if (linkInfoFlags.HasFlag(LinkInfoFlags.CommonNetworkRelativeLinkAndPathSuffix))
+        {
+            #region CommonNetworkRelativeLink
+
+
+            CommonNetworkRelativeLinkFlags commonNetworkRelativeLinkFlags = (CommonNetworkRelativeLinkFlags)reader.ReadInt32();
+            Console.WriteLine($"  CommonNetworkRelativeLinkFlags: {commonNetworkRelativeLinkFlags:X8}");
+            Console.WriteLine(commonNetworkRelativeLinkFlags.ToDetailedString());
+
+            Console.WriteLine($"  NetNameOffset: {reader.ReadInt32()}");
+            Console.WriteLine($"  DeviceNameOffset: {reader.ReadInt32()}");
+
+            NetworkProviderType networkProviderType = (NetworkProviderType)reader.ReadInt32();
+            Console.WriteLine($"  NetworkProviderType: {networkProviderType:X8}");
+            Console.WriteLine(networkProviderType.ToDetailedString());
+
+            Console.WriteLine($"  NetNameOffsetUnicode: {reader.ReadInt32()}");
+            Console.WriteLine($"  DeviceNameOffsetUnicode: {reader.ReadInt32()}");
+
+            Console.WriteLine($"  NetName: {reader.ReadNullTerminatedString()}");
+            if (commonNetworkRelativeLinkFlags.HasFlag(CommonNetworkRelativeLinkFlags.ValidDevice))
+            {
+                Console.WriteLine($"  DeviceName: {reader.ReadNullTerminatedString()}");
+            }
+            Console.WriteLine($"  NetNameUnicode: {reader.ReadNullTerminatedUnicodeString()}");
+            if (commonNetworkRelativeLinkFlags.HasFlag(CommonNetworkRelativeLinkFlags.ValidDevice))
+            {
+                Console.WriteLine($"  DeviceNameUnicode: {reader.ReadNullTerminatedUnicodeString()}");
+            }
+
+            #endregion
+        }
+        Console.WriteLine($"  CommonPathSuffix: {reader.ReadNullTerminatedString()}");
+
+
+        Console.WriteLine($"  LocalBasePathUnicode: {reader.ReadNullTerminatedString()}");
+        Console.WriteLine($"  CommonPathSuffixUnicode: {reader.ReadNullTerminatedString()}");
+
+        #endregion
+
+        #region StringData
 
         Console.WriteLine("StringData");
 
+        if (linkFlags.HasFlag(LinkFlags.HasName))
+        {
+            string nameString = reader.ReadString(linkFlags.HasFlag(LinkFlags.IsUnicode));
+            Console.WriteLine($"  NameString: {nameString}");
+        }
+        if (linkFlags.HasFlag(LinkFlags.HasRelativePath))
+        {
+            string relativePath = reader.ReadString(linkFlags.HasFlag(LinkFlags.IsUnicode));
+            Console.WriteLine($"  RelativePath: {relativePath}");
+        }
+        if (linkFlags.HasFlag(LinkFlags.HasWorkingDir))
+        {
+            string workingDir = reader.ReadString(linkFlags.HasFlag(LinkFlags.IsUnicode));
+            Console.WriteLine($"  WorkingDir: {workingDir}");
+        }
+        if (linkFlags.HasFlag(LinkFlags.HasArguments))
+        {
+            string commandLineArguments = reader.ReadString(linkFlags.HasFlag(LinkFlags.IsUnicode));
+            Console.WriteLine($"  CommandLineArguments: {commandLineArguments}");
+        }
+        if (linkFlags.HasFlag(LinkFlags.HasIconLocation))
+        {
+            string iconLocation = reader.ReadString(linkFlags.HasFlag(LinkFlags.IsUnicode));
+            Console.WriteLine($"  IconLocation: {iconLocation}");
+        }
+
+        #endregion
+
+        #region ExtraData
+
         Console.WriteLine("ExtraData");
+
+        #endregion
     }
 
     private void Read(BinaryReader reader)
@@ -135,6 +248,47 @@ public class Shortcut
             throw new ShortcutException($"  Invalid LinkCLSID: {linkCLSID} instead of {ShellLinkCLSID}");
         }
 
+        LinkFlags linkFlags = (LinkFlags)reader.ReadInt32();
+
+        #endregion
+
+        #region LinkTargetIDList
+
+        #endregion
+
+        #region LinkInfo
+
+        #endregion
+
+        #region StringData
+
+        if (linkFlags.HasFlag(LinkFlags.HasName))
+        {
+            FullName = reader.ReadString(linkFlags.HasFlag(LinkFlags.IsUnicode));
+        }
+        if (linkFlags.HasFlag(LinkFlags.HasRelativePath))
+        {
+            RelativePath = reader.ReadString(linkFlags.HasFlag(LinkFlags.IsUnicode));
+        }
+        if (linkFlags.HasFlag(LinkFlags.HasWorkingDir))
+        {
+            WorkingDirectory = reader.ReadString(linkFlags.HasFlag(LinkFlags.IsUnicode));
+        }
+        if (linkFlags.HasFlag(LinkFlags.HasArguments))
+        {
+            Arguments = reader.ReadString(linkFlags.HasFlag(LinkFlags.IsUnicode));
+        }
+        if (linkFlags.HasFlag(LinkFlags.HasIconLocation))
+        {
+            IconLocation = reader.ReadString(linkFlags.HasFlag(LinkFlags.IsUnicode));
+        }
+
+        #endregion
+
+        #region ExtraData
+
+
+
         #endregion
     }
 
@@ -149,9 +303,9 @@ public class Shortcut
 
 
 
-    /*
+    
 
-    public string FullName { get; }
+    public string FullName { get; private set; }
 
 
     public string Arguments { get; set; }
@@ -166,7 +320,7 @@ public class Shortcut
     public string IconLocation { get; set; }
 
 
-    public string RelativePath { set; }
+    public string RelativePath { get;  set; }
 
 
     public string TargetPath { get; set; }
@@ -177,5 +331,4 @@ public class Shortcut
 
     public string WorkingDirectory { get; set; }
 
-    */
 }
