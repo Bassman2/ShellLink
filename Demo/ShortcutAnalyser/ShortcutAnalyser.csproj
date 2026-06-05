@@ -9,4 +9,8 @@
     <InvariantGlobalization>true</InvariantGlobalization>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\Src\Shortcut100\Shortcut100.csproj" />
+  </ItemGroup>
+
 </Project>
