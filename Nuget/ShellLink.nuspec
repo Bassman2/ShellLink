@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>ShellLink</id>
+    <version>0.1.0</version>
+    <title>ShellLink</title>
+    <authors>Ralf Beckers</authors>
+    <owners>Ralf Beckers</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <license type="expression">MIT</license>
+    <licenseUrl>https://licenses.nuget.org/MIT</licenseUrl>
+    <projectUrl>https://github.com/Bassman2/ShellLink</projectUrl>
+    <description>ShellLink</description>
+    <releaseNotes>Creation</releaseNotes>
+    <copyright>Copyright 2026 (c) by Ralf Beckers</copyright>
+    <repository type="git" url="https://github.com/Bassman2/ShellLink"/>
+    <tags>ShellLink</tags>
+    <readme>docs\README.md</readme>
+    <dependencies>
+      <group targetFramework=".NET10.0" />
+     </dependencies>
+  </metadata>
+  <files>
+    <file src="..\Src\Shortcut100\bin\Release\net10.0\**" target="lib/net10.0" />
+    <file src="..\README.md" target="docs\" />
+    <file src="..\LICENSE" target="content" />
+  </files>
+</package>

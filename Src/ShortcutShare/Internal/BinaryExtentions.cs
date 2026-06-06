@@ -1,4 +1,5 @@
 ﻿using System.Buffers.Binary;
+using System.Text;
 
 namespace ShortcutShare;
 
@@ -28,28 +29,27 @@ internal static class BinaryExtentions
         var chars = new List<char>();
         while (true)
         {
-            char c = reader.ReadChar();
-            if (c == '\0')
+            byte c = reader.ReadByte();
+            if (c == 0)
             {
                 break;
             }
-            chars.Add(c);
+            chars.Add((char)c);
         }
         return new string(chars.ToArray());
     }
 
     public static string ReadNullTerminatedUnicodeString(this BinaryReader reader)
     {
-        string  x = System.Text.Encoding.Unicode.GetString()
         var chars = new List<char>();
         while (true)
         {
-            char c = reader.ReadChar();
-            if (c == '\0')
+            ushort c = reader.ReadUInt16();
+            if (c == 0)
             {
                 break;
             }
-            chars.Add(c);
+            chars.Add((char)c);
         }
         return new string(chars.ToArray());
     }

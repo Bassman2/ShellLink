@@ -1,0 +1,1 @@
+nuget pack ShellLink.nuspec -properties Configuration=Release
