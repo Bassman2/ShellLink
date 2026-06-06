@@ -18,7 +18,13 @@
     <Compile Include="$(MSBuildThisFileDirectory)LinkInfoFlags.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NetworkProviderType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Shortcut.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Shortcut.ExtraData.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Shortcut.LinkInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Shortcut.LinkTargetIDList.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Shortcut.ShellLinkHeader.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Shortcut.StringData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ShortcutException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ShowCommand.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Internal\" />

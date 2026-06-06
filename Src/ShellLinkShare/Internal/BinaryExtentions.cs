@@ -1,10 +1,37 @@
 ﻿using System.Buffers.Binary;
-using System.Text;
 
 namespace ShellLink;
 
 internal static class BinaryExtentions
 {
+    extension(BinaryReader reader)
+    {
+        public int Position
+        {
+            get => (int)reader.BaseStream.Position;
+            set => reader.BaseStream.Position = value;
+        }
+    }
+
+    extension(BinaryWriter writer)
+    {
+        public int Position
+        {
+            get => (int)writer.BaseStream.Position;
+            set => writer.BaseStream.Position = value;
+        }
+    }
+
+
+    //public static int GetPosition(this BinaryReader reader)
+    //{
+    //    return (int)reader.BaseStream.Position;
+    //}
+
+    //public static int GetPosition(this BinaryWriter writer)
+    //{
+    //    return (int)writer.BaseStream.Position;
+    //}
 
     public static string ReadString(this BinaryReader reader, bool isUnicode)
     {
@@ -81,9 +108,11 @@ internal static class BinaryExtentions
     /// <returns>A DateTime representing the FILETIME value, or DateTime.MinValue if the FILETIME is 0.</returns>
     public static DateTime ReadFileTime(this BinaryReader reader)
     {
-        Span<byte> buffer = stackalloc byte[8];
-        reader.ReadExactly(buffer);
-        long fileTime = BinaryPrimitives.ReadInt64LittleEndian(buffer);
+        long fileTime = reader.ReadInt64();
+        
+        //Span<byte> buffer = stackalloc byte[8];
+        //reader.ReadExactly(buffer);
+        //long fileTime = BinaryPrimitives.ReadInt64LittleEndian(buffer);
 
         // FILETIME of 0 represents an invalid or uninitialized time
         if (fileTime == 0)
@@ -102,6 +131,20 @@ internal static class BinaryExtentions
         }
     }
 
+    public static void Write(this BinaryWriter writer, DateTime? value)
+    {
+        if (value == null)
+        {
+            writer.Write((long)0); // Write 8 zero bytes for null FILETIME
+            return;
+        }
+        
+        long fileTime = value.Value.ToFileTimeUtc();
+        Span<byte> buffer = stackalloc byte[8];
+        BinaryPrimitives.WriteInt64LittleEndian(buffer, fileTime);
+        writer.Write(buffer);
+    }
+
     /// <summary>
     /// Reads an 8-byte FILETIME structure from the stream and converts it to a formatted string.
     /// </summary>
@@ -118,6 +161,8 @@ internal static class BinaryExtentions
 
         return dateTime.ToString(format);
     }
+
+    
 
 
 

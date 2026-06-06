@@ -54,10 +54,10 @@ internal static class FlagsExtensions
 
             if (flags.HasFlag(flag))
             {
-                lines.Add($"    - {flag}");
+                lines.Add($"      - {flag}");
             }
         }
 
-        return lines.Count > 0 ? string.Join(Environment.NewLine, lines) : "None";
+        return lines.Count > 0 ? Environment.NewLine + string.Join(Environment.NewLine, lines) : "None";
     }
 }
