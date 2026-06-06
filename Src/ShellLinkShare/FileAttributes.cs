@@ -1,4 +1,4 @@
-﻿namespace ShortcutShare;
+﻿namespace ShellLink;
 
 [Flags]
 public enum FileAttributes : uint

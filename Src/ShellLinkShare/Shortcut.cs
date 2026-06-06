@@ -1,9 +1,9 @@
 ﻿
 using System.Runtime.CompilerServices;
 
-[assembly: InternalsVisibleTo("ShortcutAnalyser")]
+[assembly: InternalsVisibleTo("ShellLinkAnalyser")]
 
-namespace ShortcutShare;
+namespace ShellLink;
 
 public class Shortcut
 {
@@ -305,30 +305,30 @@ public class Shortcut
 
     
 
-    public string FullName { get; private set; }
+    public string? FullName { get; private set; }
 
 
-    public string Arguments { get; set; }
+    public string? Arguments { get; set; }
 
 
-    public string Description { get; set; }
+    public string? Description { get; set; }
 
 
-    public string Hotkey { get; set; }
+    public string? Hotkey { get; set; }
 
 
-    public string IconLocation { get; set; }
+    public string? IconLocation { get; set; }
 
 
-    public string RelativePath { get;  set; }
+    public string? RelativePath { get;  set; }
 
 
-    public string TargetPath { get; set; }
+    public string? TargetPath { get; set; }
 
 
     public int WindowStyle { get; set; }
 
 
-    public string WorkingDirectory { get; set; }
+    public string? WorkingDirectory { get; set; }
 
 }

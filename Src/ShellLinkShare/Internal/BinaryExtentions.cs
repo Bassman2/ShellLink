@@ -1,7 +1,7 @@
 ﻿using System.Buffers.Binary;
 using System.Text;
 
-namespace ShortcutShare;
+namespace ShellLink;
 
 internal static class BinaryExtentions
 {

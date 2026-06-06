@@ -1,4 +1,4 @@
-﻿using ShortcutShare;
+﻿using ShellLink;
 
 namespace ShortcutAnalyser;
 

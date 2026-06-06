@@ -6,7 +6,7 @@
     <SharedGUID>cb09c5a6-b436-4a62-beb7-dd8cf891886a</SharedGUID>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
-    <Import_RootNamespace>ShortcutShare</Import_RootNamespace>
+    <Import_RootNamespace>ShellLink</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)CommonNetworkRelativeLinkFlags.cs" />

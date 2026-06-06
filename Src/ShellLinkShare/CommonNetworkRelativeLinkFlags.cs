@@ -1,4 +1,4 @@
-﻿namespace ShortcutShare;
+﻿namespace ShellLink;
 
 public enum CommonNetworkRelativeLinkFlags
 {

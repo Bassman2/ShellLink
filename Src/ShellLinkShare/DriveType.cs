@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ShortcutShare;
+﻿namespace ShellLink;
 
 public enum DriveType
 {

@@ -1,4 +1,4 @@
-﻿namespace ShortcutShare;
+﻿namespace ShellLink;
 
 /// <summary>
 /// Flags that specify which shell link structures are present in the file.
