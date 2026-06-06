@@ -58,6 +58,8 @@ public sealed partial class Shortcut
         }
     }
 
+    // Firmware 10112006
+    // Seriennummer 20038P441210
     private void AnalyseLinkInfoVolumeID(BinaryReader reader)
     {
         if (linkInfoFlags.HasFlag(LinkInfoFlags.VolumeIDAndLocalBasePath))
@@ -67,7 +69,7 @@ public sealed partial class Shortcut
             Console.WriteLine($"  VolumeID: (Start: 0x{volumeIDStart:X}, Size: 0x{volumeIDSize:X})");
 
             DriveType driveType = (DriveType)reader.ReadInt32();
-            Console.WriteLine($"    DriveType: {driveType:X} {driveType.ToDetailedString()}");
+            Console.WriteLine($"    DriveType: {driveType:X} {driveType}");
 
             Console.WriteLine($"    DriveSerialNumber: {reader.ReadInt32()}");
             Console.WriteLine($"    VolumeLabelOffset: {reader.ReadInt32()}");

@@ -23,10 +23,10 @@ public sealed partial class Shortcut
             }
 
             int idListEnd = reader.Position;
-            Console.WriteLine($"LinkTargetIDList End: {idListStart + idListSize} == {idListEnd}");
+            Console.WriteLine($"LinkTargetIDList End: 0x{idListStart + idListSize:X} == 0x{idListEnd:X}");
             if (idListStart + idListSize != idListEnd)
             {
-                Console.Error.WriteLine($"Error: Invalid IDListSize: {idListSize} instead of actual size {idListEnd - idListStart}");
+                Console.Error.WriteLine($"Error: Invalid IDListSize: 0x{idListSize:X} instead of actual size 0x{idListEnd - idListStart:X}");
             }
         }   
     }
