@@ -4,20 +4,20 @@ public sealed partial class Shortcut
 {
     private void AnalyseLinkInfo(BinaryReader reader)
     {
-        Console.WriteLine();
-        Console.WriteLine($"LinkInfo (Start: 0x{reader.Position:X})");
-
         int linkInfoStart = reader.Position;
         int linkInfoSize = reader.ReadInt32();
-        Console.WriteLine($"  LinkInfoSize: {linkInfoSize}");
+
+        Console.WriteLine();
+        Console.WriteLine($"LinkInfo (Start: 0x{linkInfoStart:X}, Size: 0x{linkInfoSize:X})");
+
+        // LinkInfoHeader
 
         int linkInfoHeaderStart = reader.Position;
         int linkInfoHeaderSize = reader.ReadInt32();
-        Console.WriteLine($"    LinkInfoHeaderSize: {linkInfoHeaderSize}");
+        Console.WriteLine($"  LinkInfoHeader (Start: 0x{linkInfoHeaderStart:X}, Size: 0x{linkInfoHeaderSize:X})");
 
         LinkInfoFlags linkInfoFlags = (LinkInfoFlags)reader.ReadInt32();
-        Console.WriteLine($"    LinkInfoFlags: {linkInfoFlags:X}");
-        Console.WriteLine(linkInfoFlags.ToDetailedString());
+        Console.WriteLine($"    LinkInfoFlags: {linkInfoFlags:X} {linkInfoFlags.ToDetailedString()}");
 
         Console.WriteLine($"    VolumeIDOffset: {reader.ReadInt32()}");
         Console.WriteLine($"    LocalBasePathOffset: {reader.ReadInt32()}");
@@ -31,54 +31,53 @@ public sealed partial class Shortcut
         }
 
         int linkInfoHeaderEnd = reader.Position;
-        if (linkInfoHeaderStart + linkInfoHeaderSize == linkInfoHeaderEnd)
+        Console.WriteLine($"  LinkInfoHeader End: {linkInfoHeaderStart + linkInfoHeaderSize} == {linkInfoHeaderEnd}");
+
+        if (linkInfoHeaderStart + linkInfoHeaderSize != linkInfoHeaderEnd)
         {
-            Console.WriteLine($"  End: {linkInfoHeaderStart + linkInfoHeaderSize} == {linkInfoHeaderEnd}");
-        }
-        else
-        {
-            Console.Error.WriteLine($"Invalid LinkInfoHeaderSize: {linkInfoHeaderSize} instead of actual size {linkInfoHeaderEnd - linkInfoHeaderStart}");
+            Console.Error.WriteLine($"Error: Invalid LinkInfoHeaderSize: {linkInfoHeaderSize} instead of actual size {linkInfoHeaderEnd - linkInfoHeaderStart}");
         }
 
+        // VolumeID
 
         if (linkInfoFlags.HasFlag(LinkInfoFlags.VolumeIDAndLocalBasePath))
         {
             #region VolumeID
 
-            Console.WriteLine($"  VolumeIDSize: {reader.ReadInt32()}");
+            int volumeIDStart = reader.Position;
+            int volumeIDSize = reader.ReadInt32();
+            Console.WriteLine($"  VolumeID: (Start: 0x{volumeIDStart:X}, Size: 0x{volumeIDSize:X})");
 
             DriveType driveType = (DriveType)reader.ReadInt32();
-            Console.WriteLine($"  DriveType: {driveType:X}");
-            Console.WriteLine(driveType.ToDetailedString());
+            Console.WriteLine($"    DriveType: {driveType:X} {driveType.ToDetailedString()}");
 
-            Console.WriteLine($"  DriveSerialNumber: {reader.ReadInt32()}");
-            Console.WriteLine($"  VolumeLabelOffset: {reader.ReadInt32()}");
-            Console.WriteLine($"  VolumeLabelOffsetUnicode: {reader.ReadInt32()}");
+            Console.WriteLine($"    DriveSerialNumber: {reader.ReadInt32()}");
+            Console.WriteLine($"    VolumeLabelOffset: {reader.ReadInt32()}");
+            Console.WriteLine($"    VolumeLabelOffsetUnicode: {reader.ReadInt32()}");
 
-            // Data
+            string data = reader.ReadString(linkFlags.HasFlag(LinkFlags.IsUnicode));
+            Console.WriteLine($"    Data: {data}");
 
-            #endregion
-
+            int volumeIDEnd = reader.Position;
+            Console.WriteLine($"  VolumeID End: 0x{volumeIDStart + volumeIDSize:X} == 0x{volumeIDEnd:X}");
+            
             #region LocalBasePath
 
             #endregion
         }
 
+        // CommonNetworkRelativeLink
+
         if (linkInfoFlags.HasFlag(LinkInfoFlags.CommonNetworkRelativeLinkAndPathSuffix))
         {
-            #region CommonNetworkRelativeLink
-
-
             CommonNetworkRelativeLinkFlags commonNetworkRelativeLinkFlags = (CommonNetworkRelativeLinkFlags)reader.ReadInt32();
-            Console.WriteLine($"  CommonNetworkRelativeLinkFlags: {commonNetworkRelativeLinkFlags:X8}");
-            Console.WriteLine(commonNetworkRelativeLinkFlags.ToDetailedString());
+            Console.WriteLine($"  CommonNetworkRelativeLinkFlags: 0x{commonNetworkRelativeLinkFlags:X8} {commonNetworkRelativeLinkFlags.ToDetailedString()}");
 
             Console.WriteLine($"  NetNameOffset: {reader.ReadInt32()}");
             Console.WriteLine($"  DeviceNameOffset: {reader.ReadInt32()}");
 
             NetworkProviderType networkProviderType = (NetworkProviderType)reader.ReadInt32();
-            Console.WriteLine($"  NetworkProviderType: {networkProviderType:X8}");
-            Console.WriteLine(networkProviderType.ToDetailedString());
+            Console.WriteLine($"  NetworkProviderType: 0x{networkProviderType:X8} {networkProviderType.ToDetailedString()}");
 
             Console.WriteLine($"  NetNameOffsetUnicode: {reader.ReadInt32()}");
             Console.WriteLine($"  DeviceNameOffsetUnicode: {reader.ReadInt32()}");
@@ -93,14 +92,15 @@ public sealed partial class Shortcut
             {
                 Console.WriteLine($"  DeviceNameUnicode: {reader.ReadNullTerminatedUnicodeString()}");
             }
-
-            #endregion
         }
         Console.WriteLine($"  CommonPathSuffix: {reader.ReadNullTerminatedString()}");
 
 
         Console.WriteLine($"  LocalBasePathUnicode: {reader.ReadNullTerminatedString()}");
         Console.WriteLine($"  CommonPathSuffixUnicode: {reader.ReadNullTerminatedString()}");
+
+        int linkInfoEnd = reader.Position;
+        Console.WriteLine($"LinkInfo End: 0x{linkInfoStart + linkInfoSize:X} == 0x{linkInfoEnd:X}");
     }
 
     private void ReadLinkInfo(BinaryReader reader)

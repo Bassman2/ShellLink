@@ -21,30 +21,23 @@ public sealed partial class Shortcut
 
     private void AnalyseShellLinkHeader(BinaryReader reader)
     {
-        Console.WriteLine();
-        Console.WriteLine($"ShellLinkHeader (Start: 0x{reader.Position:X})");
-
         int headerStart = reader.Position;
-
         int headerSize = reader.ReadInt32();
-        if (headerSize == ShellLinkHeaderSize)
+
+        Console.WriteLine();
+        Console.WriteLine($"ShellLinkHeader (Start: 0x{headerStart:X}, Size: 0x{headerSize:X})");
+                
+        if (headerSize != ShellLinkHeaderSize)
         {
-            Console.WriteLine($"  HeaderSize: 0x{headerSize:X}");
-        }
-        else
-        {
-            Console.Error.WriteLine($"Invalid HeaderSize: 0x{headerSize:X} instead of 0x{ShellLinkHeaderSize:X}");
+            Console.Error.WriteLine($"Error: Invalid HeaderSize: 0x{headerSize:X} instead of 0x{ShellLinkHeaderSize:X}");
             return;
         }
 
         Guid linkCLSID = reader.ReadGuid();
-        if (linkCLSID == ShellLinkCLSID)
+        Console.WriteLine($"  LinkCLSID: {linkCLSID}");
+        if (linkCLSID != ShellLinkCLSID)
         {
-            Console.WriteLine($"  LinkCLSID: {linkCLSID}");
-        }
-        else
-        {
-            Console.Error.WriteLine($"Invalid LinkCLSID: {linkCLSID} instead of {ShellLinkCLSID}");
+            Console.Error.WriteLine($"Error: Invalid LinkCLSID: {linkCLSID} instead of {ShellLinkCLSID}");
             return;
         }
 
@@ -60,6 +53,7 @@ public sealed partial class Shortcut
         Console.WriteLine($"  FileSize: 0x{reader.ReadInt32():X}");
 
         Console.WriteLine($"  IconIndex: {reader.ReadInt32()}");
+
         showCommand = (ShowCommand)reader.ReadInt32();
         Console.WriteLine($"  ShowCommand: {showCommand}");
 
@@ -70,13 +64,11 @@ public sealed partial class Shortcut
         Console.WriteLine($"  Reserved3: {reader.ReadInt32()}");
 
         int headerEnd = reader.Position;
-        if (headerStart + headerSize == headerEnd)
+        Console.WriteLine($"ShellLinkHeader End: 0x{headerStart + headerSize:X} == 0x{headerEnd:X}");
+       
+        if (headerStart + headerSize != headerEnd)
         {
-            Console.WriteLine($"  End: {headerStart + headerSize} == {headerEnd}");
-        }
-        else
-        {
-            Console.Error.WriteLine($"Invalid HeaderSize: {headerSize} instead of actual size {headerEnd - headerStart}");
+            Console.Error.WriteLine($"Error: Invalid HeaderSize: 0x{headerSize:X} instead of actual size 0x{headerEnd - headerStart:X}");
         }
     }
 
@@ -85,13 +77,13 @@ public sealed partial class Shortcut
         int headerSize = reader.ReadInt32();
         if (headerSize != ShellLinkHeaderSize)
         {
-            throw new ShortcutException($"Invalid HeaderSize: {headerSize} instead of {ShellLinkHeaderSize}");
+            throw new ShortcutException($"Error: Invalid HeaderSize: {headerSize} instead of {ShellLinkHeaderSize}");
         }
 
         Guid linkCLSID = reader.ReadGuid();
         if (linkCLSID != ShellLinkCLSID)
         {
-            throw new ShortcutException($"Invalid LinkCLSID: {linkCLSID} instead of {ShellLinkCLSID}");
+            throw new ShortcutException($"Error: Invalid LinkCLSID: {linkCLSID} instead of {ShellLinkCLSID}");
         }
 
         linkFlags = (LinkFlags)reader.ReadInt32();

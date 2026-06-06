@@ -7,12 +7,11 @@ public sealed partial class Shortcut
     {
         if (linkFlags.HasFlag(LinkFlags.HasLinkTargetIDList))
         {
-            Console.WriteLine();
-            Console.WriteLine("LinkTargetIDList (Start: 0x{reader.Position:X})");
-
             int idListSize = reader.ReadInt16();
             int idListStart = reader.Position; // not including idListSize
-            Console.WriteLine($"  IDListSize: {idListSize}");
+
+            Console.WriteLine();
+            Console.WriteLine($"LinkTargetIDList (Start: 0x{idListStart - 2:X}, Size: 0x{idListSize:X})");
 
             while (true)
             {
@@ -24,13 +23,10 @@ public sealed partial class Shortcut
             }
 
             int idListEnd = reader.Position;
-            if (idListStart + idListSize == idListEnd)
+            Console.WriteLine($"LinkTargetIDList End: {idListStart + idListSize} == {idListEnd}");
+            if (idListStart + idListSize != idListEnd)
             {
-                Console.WriteLine($"  End: {idListStart + idListSize} == {idListEnd}");
-            }
-            else
-            {
-                Console.Error.WriteLine($"Invalid IDListSize: {idListSize} instead of actual size {idListEnd - idListStart}");
+                Console.Error.WriteLine($"Error: Invalid IDListSize: {idListSize} instead of actual size {idListEnd - idListStart}");
             }
         }   
     }
