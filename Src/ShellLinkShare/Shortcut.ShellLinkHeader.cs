@@ -91,10 +91,26 @@ public sealed partial class Shortcut
         Guid linkCLSID = reader.ReadGuid();
         if (linkCLSID != ShellLinkCLSID)
         {
-            throw new ShortcutException($"  Invalid LinkCLSID: {linkCLSID} instead of {ShellLinkCLSID}");
+            throw new ShortcutException($"Invalid LinkCLSID: {linkCLSID} instead of {ShellLinkCLSID}");
         }
 
-        LinkFlags linkFlags = (LinkFlags)reader.ReadInt32();
+        linkFlags = (LinkFlags)reader.ReadInt32();
+        fileAttributes = (FileAttributes)reader.ReadInt32();
+        creationTime = reader.ReadFileTime();
+        accessTime = reader.ReadFileTime();
+        writeTime = reader.ReadFileTime();
+        fileSize = reader.ReadInt32();
+        iconIndex = reader.ReadInt32();
+        showCommand = (ShowCommand)reader.ReadInt32();
+        hotKey = reader.ReadInt16();
+        Int16 reserved1 = reader.ReadInt16();
+        Int32 reserved2 = reader.ReadInt32();
+        Int32 reserved3 = reader.ReadInt32();
+
+        if (reader.Position != ShellLinkHeaderSize)
+        {
+            throw new ShortcutException("Failed to read ShellLinkHeader");
+        }
     }
 
     private void WriteShellLinkHeader(BinaryWriter writer)
