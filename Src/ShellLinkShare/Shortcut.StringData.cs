@@ -1,11 +1,13 @@
-﻿namespace ShellLink;
+﻿using System.Reflection.PortableExecutable;
+
+namespace ShellLink;
 
 public sealed partial class Shortcut
 {
     private void AnalyseStringData(BinaryReader reader)
     {
         Console.WriteLine();
-        Console.WriteLine("StringData");
+        Console.WriteLine($"StringData (Start: 0x{reader.Position:X})");
 
         if (linkFlags.HasFlag(LinkFlags.HasName))
         {
@@ -36,10 +38,54 @@ public sealed partial class Shortcut
 
     private void ReadStringData(BinaryReader reader)
     {
+        bool isUnicode = linkFlags.HasFlag(LinkFlags.IsUnicode);
+
+        if (linkFlags.HasFlag(LinkFlags.HasName))
+        {
+            FullName = reader.ReadString(isUnicode);
+        }
+        if (linkFlags.HasFlag(LinkFlags.HasRelativePath))
+        {
+            RelativePath = reader.ReadString(isUnicode);
+        }
+        if (linkFlags.HasFlag(LinkFlags.HasWorkingDir))
+        {
+            WorkingDirectory = reader.ReadString(isUnicode);
+        }
+        if (linkFlags.HasFlag(LinkFlags.HasArguments))
+        {
+            Arguments = reader.ReadString(isUnicode);
+        }
+        if (linkFlags.HasFlag(LinkFlags.HasIconLocation))
+        {
+            IconLocation = reader.ReadString(isUnicode);
+        }
     }
 
     private void WriteStringData(BinaryWriter writer)
     {
+        bool isUnicode = linkFlags.HasFlag(LinkFlags.IsUnicode);
+
+        if (linkFlags.HasFlag(LinkFlags.HasName))
+        {
+            writer.Write(FullName, isUnicode);
+        }
+        if (linkFlags.HasFlag(LinkFlags.HasRelativePath))
+        {
+            writer.Write(RelativePath, isUnicode);
+        }
+        if (linkFlags.HasFlag(LinkFlags.HasWorkingDir))
+        {
+            writer.Write(WorkingDirectory, isUnicode);
+        }
+        if (linkFlags.HasFlag(LinkFlags.HasArguments))
+        {
+            writer.Write(Arguments, isUnicode);
+        }
+        if (linkFlags.HasFlag(LinkFlags.HasIconLocation))
+        {
+            writer.Write(IconLocation, isUnicode);
+        }
 
     }
 }       

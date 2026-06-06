@@ -51,6 +51,29 @@ internal static class BinaryExtentions
         }
     }
 
+    public static void Write(this BinaryWriter writer, string? str, bool isUnicode)
+    {
+        if (str == null)
+        {
+            writer.Write((short)0); // Write length 0 for null string
+            return;
+        }
+
+        short length = (short)str.Length;
+        writer.Write(length);
+        if (isUnicode)
+        {
+            for (int i = 0; i < str.Length; i++)
+            {
+                writer.Write((short)str[i]);
+            }
+        }
+        else
+        {
+            writer.Write(str.ToCharArray());
+        }
+    }
+
     public static string ReadNullTerminatedString(this BinaryReader reader)
     {
         var chars = new List<char>();

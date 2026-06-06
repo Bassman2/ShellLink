@@ -61,6 +61,16 @@ public sealed partial class Shortcut
 
     private void Write(BinaryWriter writer)
     {
+        linkFlags =
+            (LinkFlags)(0
+                | (FullName != null ? LinkFlags.HasName : 0)
+                | (RelativePath != null ? LinkFlags.HasRelativePath : 0)
+                | (WorkingDirectory != null ? LinkFlags.HasWorkingDir : 0)
+                | (Arguments != null ? LinkFlags.HasArguments : 0)
+                | (IconLocation != null ? LinkFlags.HasIconLocation : 0)
+                
+            );
+
         WriteShellLinkHeader(writer);
         WriteLinkTargetIDList(writer);
         WriteLinkInfo(writer);

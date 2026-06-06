@@ -22,7 +22,7 @@ public sealed partial class Shortcut
     private void AnalyseShellLinkHeader(BinaryReader reader)
     {
         Console.WriteLine();
-        Console.WriteLine($"ShellLinkHeader");
+        Console.WriteLine($"ShellLinkHeader (Start: 0x{reader.Position:X})");
 
         int headerStart = reader.Position;
 

@@ -8,7 +8,7 @@ public sealed partial class Shortcut
         if (linkFlags.HasFlag(LinkFlags.HasLinkTargetIDList))
         {
             Console.WriteLine();
-            Console.WriteLine("LinkTargetIDList");
+            Console.WriteLine("LinkTargetIDList (Start: 0x{reader.Position:X})");
 
             int idListSize = reader.ReadInt16();
             int idListStart = reader.Position; // not including idListSize

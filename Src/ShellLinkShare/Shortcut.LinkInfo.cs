@@ -5,7 +5,8 @@ public sealed partial class Shortcut
     private void AnalyseLinkInfo(BinaryReader reader)
     {
         Console.WriteLine();
-        Console.WriteLine("LinkInfo");
+        Console.WriteLine($"LinkInfo (Start: 0x{reader.Position:X})");
+
         int linkInfoStart = reader.Position;
         int linkInfoSize = reader.ReadInt32();
         Console.WriteLine($"  LinkInfoSize: {linkInfoSize}");
