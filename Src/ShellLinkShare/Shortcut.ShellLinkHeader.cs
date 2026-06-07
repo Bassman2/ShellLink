@@ -1,5 +1,4 @@
 ﻿using ShellLink.Internal;
-using System.Xml.Linq;
 
 namespace ShellLink;
 
@@ -50,7 +49,9 @@ public sealed partial class Shortcut
         showCommand = (ShowCommand)reader.ReadInt32();
         Console.WriteLine($"  ShowCommand: {showCommand}");
 
-        Console.WriteLine($"  HotKey: {reader.ReadInt16()}");
+        HotKeys hotKeys = (HotKeys)reader.ReadByte();
+        HotKeyFlags hotKeyFlags = (HotKeyFlags)reader.ReadByte();
+        Console.WriteLine($"  HotKey: {hotKeys} {hotKeyFlags.ToFlagsString()}");
 
         Console.WriteLine($"  Reserved1: {reader.ReadInt16()}");
         Console.WriteLine($"  Reserved2: {reader.ReadInt32()}");

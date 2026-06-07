@@ -4,7 +4,7 @@ internal static class FlagsExtensions
 {
     public static string ToFlagsString<T>(this T flags) where T : Enum
     {
-        var defaultValue = (T)(object)0;
+        var defaultValue = default(T);
         if (flags.Equals(defaultValue))
         {
             return "None";
