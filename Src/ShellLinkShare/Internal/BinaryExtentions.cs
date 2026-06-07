@@ -4,6 +4,8 @@ namespace ShellLink;
 
 internal static class BinaryExtentions
 {
+    private const int MaxStringLength = 260;
+
     extension(BinaryReader reader)
     {
         public int Position
@@ -36,6 +38,11 @@ internal static class BinaryExtentions
     public static string ReadString(this BinaryReader reader, bool isUnicode)
     {
         short length = reader.ReadInt16();
+        if (length > MaxStringLength)
+        {
+            return string.Empty; // Invalid length, return empty string
+        }
+
         if (isUnicode)
         {
             var chars = new char[length / 2];

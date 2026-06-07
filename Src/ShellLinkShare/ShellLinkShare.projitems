@@ -13,6 +13,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)DriveType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Internal\BinaryExtentions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileAttributes.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Internal\ConHelp.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Internal\FlagsExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LinkFlags.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LinkInfoFlags.cs" />
@@ -25,8 +26,5 @@
     <Compile Include="$(MSBuildThisFileDirectory)Shortcut.StringData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ShortcutException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ShowCommand.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="$(MSBuildThisFileDirectory)Internal\" />
   </ItemGroup>
 </Project>

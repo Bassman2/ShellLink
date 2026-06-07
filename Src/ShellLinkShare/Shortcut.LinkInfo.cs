@@ -1,4 +1,6 @@
-﻿namespace ShellLink;
+﻿using ShellLink.Internal;
+
+namespace ShellLink;
 
 public sealed partial class Shortcut
 {
@@ -9,8 +11,9 @@ public sealed partial class Shortcut
         int linkInfoStart = reader.Position;
         int linkInfoSize = reader.ReadInt32();
 
-        Console.WriteLine();
-        Console.WriteLine($"LinkInfo (Start: 0x{linkInfoStart:X}, Size: 0x{linkInfoSize:X})");
+        ConHelp.StartTag("LinkInfo", linkInfoStart, linkInfoSize);
+        //Console.WriteLine();
+        //Console.WriteLine($"LinkInfo (Start: 0x{linkInfoStart:X}, Size: 0x{linkInfoSize:X})");
 
         AnalyseLinkInfoHeader(reader);
         AnalyseLinkInfoVolumeID(reader);
@@ -26,7 +29,8 @@ public sealed partial class Shortcut
         Console.WriteLine($"  CommonPathSuffixUnicode: {reader.ReadNullTerminatedUnicodeString()}");
 
         int linkInfoEnd = reader.Position;
-        Console.WriteLine($"LinkInfo End: 0x{linkInfoStart + linkInfoSize:X} == 0x{linkInfoEnd:X}");
+        ConHelp.EndTag("LinkInfo", linkInfoStart, linkInfoSize, linkInfoEnd);
+        //Console.WriteLine($"LinkInfo End: 0x{linkInfoStart + linkInfoSize:X} == 0x{linkInfoEnd:X}");
     }
 
     private void AnalyseLinkInfoHeader(BinaryReader reader)
@@ -50,9 +54,9 @@ public sealed partial class Shortcut
         }
 
         int linkInfoHeaderEnd = reader.Position;
-        Console.WriteLine($"  LinkInfoHeader End: {linkInfoHeaderStart + linkInfoHeaderSize} == {linkInfoHeaderEnd}");
+        Console.WriteLine($"  LinkInfoHeader End (Calc: {linkInfoHeaderStart + linkInfoHeaderSize - 4}, Position: {linkInfoHeaderEnd})");
 
-        if (linkInfoHeaderStart + linkInfoHeaderSize != linkInfoHeaderEnd)
+        if (linkInfoHeaderStart - 8 + linkInfoHeaderSize != linkInfoHeaderEnd)
         {
             Console.Error.WriteLine($"Error: Invalid LinkInfoHeaderSize: {linkInfoHeaderSize} instead of actual size {linkInfoHeaderEnd - linkInfoHeaderStart}");
         }
