@@ -1,10 +1,13 @@
 ﻿
+using ShellLink.Internal;
 using System.Reflection.PortableExecutable;
 using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("ShellLinkAnalyser")]
 
 namespace ShellLink;
+
+// https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-propstore/39ea873f-7af5-44dd-92f9-bc1f293852cc
 
 public sealed partial class Shortcut
 {
@@ -48,6 +51,8 @@ public sealed partial class Shortcut
         AnalyseLinkInfo(reader);
         AnalyseStringData(reader);
         AnalyseExtraData(reader);
+
+        Assert.FileEnding(reader);
     }
 
     private void Read(BinaryReader reader)

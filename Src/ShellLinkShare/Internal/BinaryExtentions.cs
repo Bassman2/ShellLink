@@ -45,7 +45,7 @@ internal static class BinaryExtentions
 
         if (isUnicode)
         {
-            var chars = new char[length / 2];
+            var chars = new char[length];
             for (int i = 0; i < chars.Length; i++)
             {
                 chars[i] = (char)reader.ReadInt16();
@@ -57,6 +57,23 @@ internal static class BinaryExtentions
             return new string(reader.ReadChars(length));
         }
     }
+
+    public static string ReadString(this BinaryReader reader, int fixedLength)
+    {
+        //    var chars = new char[fixedLength];
+        //    for (int i = 0; i < fixedLength; i++)
+        //    {
+        //        chars[i] = (char)reader.ReadByte();
+        //    }
+        //    return new string(chars);
+        //}
+        //else
+        //{
+            return new string(reader.ReadChars(fixedLength));
+        //}
+    }
+
+    
 
     public static void Write(this BinaryWriter writer, string? str, bool isUnicode)
     {

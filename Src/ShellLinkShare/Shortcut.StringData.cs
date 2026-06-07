@@ -1,4 +1,4 @@
-﻿using System.Reflection.PortableExecutable;
+﻿using ShellLink.Internal;
 
 namespace ShellLink;
 
@@ -6,8 +6,7 @@ public sealed partial class Shortcut
 {
     private void AnalyseStringData(BinaryReader reader)
     {
-        Console.WriteLine();
-        Console.WriteLine($"StringData (Start: 0x{reader.Position:X})");
+        using var _ = new OpenTag(reader, "StringData");
 
         if (linkFlags.HasFlag(LinkFlags.HasName))
         {

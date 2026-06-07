@@ -33,7 +33,27 @@ internal static class Assert
     //    EndTag("  " + name, Start, size, end, offset);
     //}
 
-    public static void Equal(string name, object value, object expected)
+    public static void Equal(string name, Guid value, Guid expected)
+    {
+        if (!value.Equals(expected))
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.Error.WriteLine($"Error: {name} is {value} instead of expected {expected}");
+            Console.ResetColor();
+        }
+    }
+
+    public static void Equal(string name, int value, int expected)
+    {
+        if (!value.Equals(expected))
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.Error.WriteLine($"Error: {name} is {value} instead of expected {expected}");
+            Console.ResetColor();
+        }
+    }
+
+    public static void Equal(string name, uint value, uint expected)
     {
         if (!value.Equals(expected))
         {
@@ -55,6 +75,16 @@ internal static class Assert
         {
             Console.ForegroundColor = ConsoleColor.Red;
             Console.Error.WriteLine($"Error: {name} is {value} larger than {max}");
+            Console.ResetColor();
+        }
+    }
+
+    public static void FileEnding(BinaryReader reader)
+    {
+        if (reader.Position != reader.BaseStream.Length)
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.Error.WriteLine("Error: Unexpected data at the end of the file");
             Console.ResetColor();
         }
     }
