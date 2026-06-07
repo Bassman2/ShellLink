@@ -23,15 +23,13 @@ public sealed partial class Shortcut
 
     private void AnalyseShellLinkHeader(BinaryReader reader)
     {
-        int headerStart = reader.Position;
-        int headerSize = reader.ReadInt32();
+        using var shellLinkHeaderTag = new Size32Tag(reader, "AnalyseShellLinkHeader");
 
-        ConHelp.StartTag("ShellLinkHeader", headerStart, headerSize);
-
-        ConHelp.Equal("HeaderSize", headerSize, ShellLinkHeaderSize);
+        Assert.Equal("HeaderSize", shellLinkHeaderTag.Size, ShellLinkHeaderSize);
+        
         Guid linkCLSID = reader.ReadGuid();
         Console.WriteLine($"  LinkCLSID: {linkCLSID}");
-        ConHelp.Equal("LinkCLSID", linkCLSID, ShellLinkCLSID);
+        Assert.Equal("LinkCLSID", linkCLSID, ShellLinkCLSID);
 
         linkFlags = (LinkFlags)reader.ReadInt32();
         Console.WriteLine($"  LinkFlags: 0x{linkFlags:X}{linkFlags.ToDetailedString()}");
@@ -56,9 +54,6 @@ public sealed partial class Shortcut
         Console.WriteLine($"  Reserved1: {reader.ReadInt16()}");
         Console.WriteLine($"  Reserved2: {reader.ReadInt32()}");
         Console.WriteLine($"  Reserved3: {reader.ReadInt32()}");
-
-        int headerEnd = reader.Position;
-        ConHelp.EndTag("ShellLinkHeader", headerStart, headerSize, headerEnd);
     }
 
     private void ReadShellLinkHeader(BinaryReader reader)

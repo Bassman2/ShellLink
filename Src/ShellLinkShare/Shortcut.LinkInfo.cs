@@ -8,11 +8,8 @@ public sealed partial class Shortcut
 
     private void AnalyseLinkInfo(BinaryReader reader)
     {
-        int linkInfoStart = reader.Position;
-        int linkInfoSize = reader.ReadInt32();
-
-        ConHelp.StartTag("LinkInfo", linkInfoStart, linkInfoSize);
-
+        using var linkInfoTag = new Size32Tag(reader, "LinkInfo");
+        
         AnalyseLinkInfoHeader(reader);
         AnalyseLinkInfoVolumeID(reader);
 
@@ -23,16 +20,12 @@ public sealed partial class Shortcut
 
         Console.WriteLine($"  LocalBasePathUnicode: {reader.ReadNullTerminatedUnicodeString()}");
         Console.WriteLine($"  CommonPathSuffixUnicode: {reader.ReadNullTerminatedUnicodeString()}");
-
-        int linkInfoEnd = reader.Position;
-        ConHelp.EndTag("LinkInfo", linkInfoStart, linkInfoSize, linkInfoEnd);
     }
 
     private void AnalyseLinkInfoHeader(BinaryReader reader)
     {
-        int linkInfoHeaderStart = reader.Position;
-        int linkInfoHeaderSize = reader.ReadInt32();
-        ConHelp.StartTag2("LinkInfoHeader", linkInfoHeaderStart, linkInfoHeaderSize);
+        int offset = -4; // including linkInfoStart
+        using var linkInfoHeaderTag = new Size32Tag(reader, "  LinkInfoHeader", offset);
 
         linkInfoFlags = (LinkInfoFlags)reader.ReadInt32();
         Console.WriteLine($"    LinkInfoFlags: {linkInfoFlags:X} {linkInfoFlags.ToDetailedString()}");
@@ -42,20 +35,11 @@ public sealed partial class Shortcut
         Console.WriteLine($"    CommonNetworkRelativeLinkOffset: {reader.ReadInt32()}");
         Console.WriteLine($"    CommonPathSuffixOffset: {reader.ReadInt32()}");
 
-        if (linkInfoHeaderSize >= 0x24)
+        if (linkInfoHeaderTag.Size >= 0x24)
         {
             Console.WriteLine($"    LocalBasePathOffsetUnicode: {reader.ReadInt32()}");
             Console.WriteLine($"    CommonPathSuffixOffsetUnicode: {reader.ReadInt32()}");
         }
-
-        int linkInfoHeaderEnd = reader.Position;
-        ConHelp.EndTag2("LinkInfoHeader", linkInfoHeaderStart, linkInfoHeaderSize, linkInfoHeaderEnd, -4);
-        //Console.WriteLine($"  LinkInfoHeader End (Calc: {linkInfoHeaderStart + linkInfoHeaderSize - 4}, Position: {linkInfoHeaderEnd})");
-
-        //if (linkInfoHeaderStart - 8 + linkInfoHeaderSize != linkInfoHeaderEnd)
-        //{
-        //    Console.Error.WriteLine($"Error: Invalid LinkInfoHeaderSize: {linkInfoHeaderSize} instead of actual size {linkInfoHeaderEnd - linkInfoHeaderStart}");
-        //}
     }
 
     // Firmware 10112006
@@ -64,9 +48,7 @@ public sealed partial class Shortcut
     {
         if (linkInfoFlags.HasFlag(LinkInfoFlags.VolumeIDAndLocalBasePath))
         {
-            int volumeIDStart = reader.Position;
-            int volumeIDSize = reader.ReadInt32();
-            Console.WriteLine($"  VolumeID: (Start: 0x{volumeIDStart:X}, Size: 0x{volumeIDSize:X})");
+            using var linkInfoVolumeIDTag = new Size32Tag(reader, "  VolumeID");
 
             DriveType driveType = (DriveType)reader.ReadInt32();
             Console.WriteLine($"    DriveType: {driveType:X} {driveType}");
@@ -77,9 +59,6 @@ public sealed partial class Shortcut
 
             string data = reader.ReadString(linkFlags.HasFlag(LinkFlags.IsUnicode));
             Console.WriteLine($"    Data: {data}");
-
-            int volumeIDEnd = reader.Position;
-            Console.WriteLine($"  VolumeID End: 0x{volumeIDStart + volumeIDSize:X} == 0x{volumeIDEnd:X}");
         }
     }
 
@@ -87,11 +66,8 @@ public sealed partial class Shortcut
     {
         if (linkInfoFlags.HasFlag(LinkInfoFlags.CommonNetworkRelativeLinkAndPathSuffix))
         {
-            int commonNetworkRelativeLinkStart = reader.Position;
-            int commonNetworkRelativeLinkSize = reader.ReadInt32();
-
-            Console.WriteLine($"  CommonNetworkRelativeLink: (Start: 0x{commonNetworkRelativeLinkStart:X}, Size: 0x{commonNetworkRelativeLinkSize:X})");
-
+            using var commonNetworkRelativeLinkTag = new Size32Tag(reader, "  CommonNetworkRelativeLink");
+            
             CommonNetworkRelativeLinkFlags commonNetworkRelativeLinkFlags = (CommonNetworkRelativeLinkFlags)reader.ReadInt32();
             Console.WriteLine($"    CommonNetworkRelativeLinkFlags: 0x{commonNetworkRelativeLinkFlags:X8} {commonNetworkRelativeLinkFlags.ToDetailedString()}");
 
@@ -114,22 +90,20 @@ public sealed partial class Shortcut
             {
                 Console.WriteLine($"    DeviceNameUnicode: {reader.ReadNullTerminatedUnicodeString()}");
             }
-
-            int commonNetworkRelativeLinkEnd = reader.Position;
-            Console.WriteLine($"  CommonNetworkRelativeLink End: {commonNetworkRelativeLinkStart + commonNetworkRelativeLinkSize} == {commonNetworkRelativeLinkEnd}");
-
-            if (commonNetworkRelativeLinkStart + commonNetworkRelativeLinkSize != commonNetworkRelativeLinkEnd)
-            {
-                Console.Error.WriteLine($"Error: Invalid CommonNetworkRelativeLink Size: {commonNetworkRelativeLinkSize} instead of actual size {commonNetworkRelativeLinkEnd - commonNetworkRelativeLinkStart}");
-            }
         }
     }
 
     private void ReadLinkInfo(BinaryReader reader)
     {
+        if (linkInfoFlags.HasFlag(LinkInfoFlags.CommonNetworkRelativeLinkAndPathSuffix))
+        {
+        }
     }
 
     private void WriteLinkInfo(BinaryWriter writer)
     {
+        if (linkInfoFlags.HasFlag(LinkInfoFlags.CommonNetworkRelativeLinkAndPathSuffix))
+        {
+        }
     }
 }
