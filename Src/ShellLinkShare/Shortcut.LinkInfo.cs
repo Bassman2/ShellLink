@@ -12,32 +12,27 @@ public sealed partial class Shortcut
         int linkInfoSize = reader.ReadInt32();
 
         ConHelp.StartTag("LinkInfo", linkInfoStart, linkInfoSize);
-        //Console.WriteLine();
-        //Console.WriteLine($"LinkInfo (Start: 0x{linkInfoStart:X}, Size: 0x{linkInfoSize:X})");
 
         AnalyseLinkInfoHeader(reader);
         AnalyseLinkInfoVolumeID(reader);
 
         Console.WriteLine($"  LocalBasePate: {reader.ReadNullTerminatedString()}");
         AnalyseLinkInfoCommonNetworkRelativeLink(reader);   
-               
         
         Console.WriteLine($"  CommonPathSuffix: {reader.ReadNullTerminatedString()}");
-
 
         Console.WriteLine($"  LocalBasePathUnicode: {reader.ReadNullTerminatedUnicodeString()}");
         Console.WriteLine($"  CommonPathSuffixUnicode: {reader.ReadNullTerminatedUnicodeString()}");
 
         int linkInfoEnd = reader.Position;
         ConHelp.EndTag("LinkInfo", linkInfoStart, linkInfoSize, linkInfoEnd);
-        //Console.WriteLine($"LinkInfo End: 0x{linkInfoStart + linkInfoSize:X} == 0x{linkInfoEnd:X}");
     }
 
     private void AnalyseLinkInfoHeader(BinaryReader reader)
     {
         int linkInfoHeaderStart = reader.Position;
         int linkInfoHeaderSize = reader.ReadInt32();
-        Console.WriteLine($"  LinkInfoHeader (Start: 0x{linkInfoHeaderStart:X}, Size: 0x{linkInfoHeaderSize:X})");
+        ConHelp.StartTag2("LinkInfoHeader", linkInfoHeaderStart, linkInfoHeaderSize);
 
         linkInfoFlags = (LinkInfoFlags)reader.ReadInt32();
         Console.WriteLine($"    LinkInfoFlags: {linkInfoFlags:X} {linkInfoFlags.ToDetailedString()}");
@@ -54,12 +49,13 @@ public sealed partial class Shortcut
         }
 
         int linkInfoHeaderEnd = reader.Position;
-        Console.WriteLine($"  LinkInfoHeader End (Calc: {linkInfoHeaderStart + linkInfoHeaderSize - 4}, Position: {linkInfoHeaderEnd})");
+        ConHelp.EndTag2("LinkInfoHeader", linkInfoHeaderStart, linkInfoHeaderSize, linkInfoHeaderEnd, -4);
+        //Console.WriteLine($"  LinkInfoHeader End (Calc: {linkInfoHeaderStart + linkInfoHeaderSize - 4}, Position: {linkInfoHeaderEnd})");
 
-        if (linkInfoHeaderStart - 8 + linkInfoHeaderSize != linkInfoHeaderEnd)
-        {
-            Console.Error.WriteLine($"Error: Invalid LinkInfoHeaderSize: {linkInfoHeaderSize} instead of actual size {linkInfoHeaderEnd - linkInfoHeaderStart}");
-        }
+        //if (linkInfoHeaderStart - 8 + linkInfoHeaderSize != linkInfoHeaderEnd)
+        //{
+        //    Console.Error.WriteLine($"Error: Invalid LinkInfoHeaderSize: {linkInfoHeaderSize} instead of actual size {linkInfoHeaderEnd - linkInfoHeaderStart}");
+        //}
     }
 
     // Firmware 10112006

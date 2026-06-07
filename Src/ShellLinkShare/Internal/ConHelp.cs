@@ -6,7 +6,7 @@ internal static class ConHelp
     {
         Console.ForegroundColor = ConsoleColor.Blue;
         Console.WriteLine();
-        Console.WriteLine($"  {name} (Start: 0x{start:X}, Size: 0x{size:X})");
+        Console.WriteLine($"{name} (Start: 0x{start:X}, Size: 0x{size:X})");
         Console.ResetColor();
     }
 
@@ -14,7 +14,7 @@ internal static class ConHelp
     {
         int calc = start + size + offset;
         Console.ForegroundColor = ConsoleColor.Blue;
-        Console.WriteLine($"  {name} End (Calc: 0x{calc:X}, Position: 0x{end:X})");
+        Console.WriteLine($"{name} End (Calc: 0x{calc:X}, Position: 0x{end:X})");
         if (start + size + offset != end)
         {
             Console.ForegroundColor = ConsoleColor.Red;
@@ -31,5 +31,15 @@ internal static class ConHelp
     public static void EndTag2(string name, int start, int size, int end, int offset = 0)
     {
         EndTag("  " + name, start, size, end, offset);
+    }
+
+    public static void Equal(string name, object value, object expected)
+    {
+        if (!value.Equals(expected))
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.Error.WriteLine($"Error: {name} is {value} instead of expected {expected}");
+            Console.ResetColor();
+        }
     }
 }
