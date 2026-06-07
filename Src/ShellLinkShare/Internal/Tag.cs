@@ -6,7 +6,7 @@ internal abstract class Tag : IDisposable
     private readonly string name;
     private readonly int offset;
 
-    private readonly int start;
+    public readonly int Start;
     public readonly int Size;
 
     public Tag(BinaryReader reader, string name, int offset = 0)
@@ -14,12 +14,12 @@ internal abstract class Tag : IDisposable
         this.reader = reader;
         this.name = name;
         this.offset = offset;
-        this.start = reader.Position;
+        this.Start = reader.Position;
         this.Size = GetSize();
 
         Console.ForegroundColor = ConsoleColor.Blue;
         //Console.WriteLine();
-        Console.WriteLine($"{name} (Start: 0x{start:X}, Size: 0x{Size:X})");
+        Console.WriteLine($"{name} (Start: 0x{Start:X}, Size: 0x{Size:X})");
         Console.ResetColor();
     }
 
@@ -28,10 +28,10 @@ internal abstract class Tag : IDisposable
     public void Dispose()
     {
         int end = reader.Position;
-        int calc = start + Size + offset;
+        int calc = Start + Size + offset;
         Console.ForegroundColor = ConsoleColor.Blue;
         Console.WriteLine($"{name} End (Calc: 0x{calc:X}, Position: 0x{end:X})");
-        if (start + Size + offset != end)
+        if (Start + Size + offset != end)
         {
             Console.ForegroundColor = ConsoleColor.Red;
             Console.Error.WriteLine($"Error: Invalid {name} Size, Calc 0x{calc:X} does not match Position: 0x{end:X}");

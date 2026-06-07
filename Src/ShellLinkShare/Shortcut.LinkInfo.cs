@@ -5,6 +5,7 @@ namespace ShellLink;
 public sealed partial class Shortcut
 {
     private LinkInfoFlags linkInfoFlags;
+    private int linkInfoHeadersize;
 
     private void AnalyseLinkInfo(BinaryReader reader)
     {
@@ -14,18 +15,23 @@ public sealed partial class Shortcut
         AnalyseLinkInfoVolumeID(reader);
 
         Console.WriteLine($"  LocalBasePate: {reader.ReadNullTerminatedString()}");
+
         AnalyseLinkInfoCommonNetworkRelativeLink(reader);   
         
         Console.WriteLine($"  CommonPathSuffix: {reader.ReadNullTerminatedString()}");
 
-        Console.WriteLine($"  LocalBasePathUnicode: {reader.ReadNullTerminatedUnicodeString()}");
-        Console.WriteLine($"  CommonPathSuffixUnicode: {reader.ReadNullTerminatedUnicodeString()}");
+        if (linkInfoHeadersize >= 0x24)
+        {
+            Console.WriteLine($"  LocalBasePathUnicode: {reader.ReadNullTerminatedUnicodeString()}");
+            Console.WriteLine($"  CommonPathSuffixUnicode: {reader.ReadNullTerminatedUnicodeString()}");
+        }
     }
 
     private void AnalyseLinkInfoHeader(BinaryReader reader)
     {
         int offset = -4; // including linkInfoStart
         using var linkInfoHeaderTag = new Size32Tag(reader, "  LinkInfoHeader", offset);
+        linkInfoHeadersize = linkInfoHeaderTag.Size;
 
         linkInfoFlags = (LinkInfoFlags)reader.ReadInt32();
         Console.WriteLine($"    LinkInfoFlags: {linkInfoFlags:X} {linkInfoFlags.ToDetailedString()}");
@@ -35,9 +41,12 @@ public sealed partial class Shortcut
         Console.WriteLine($"    CommonNetworkRelativeLinkOffset: {reader.ReadInt32()}");
         Console.WriteLine($"    CommonPathSuffixOffset: {reader.ReadInt32()}");
 
-        if (linkInfoHeaderTag.Size >= 0x24)
+        if (linkInfoHeaderTag.Size >= 0x20)
         {
             Console.WriteLine($"    LocalBasePathOffsetUnicode: {reader.ReadInt32()}");
+        }
+        if (linkInfoHeaderTag.Size >= 0x24)
+        {
             Console.WriteLine($"    CommonPathSuffixOffsetUnicode: {reader.ReadInt32()}");
         }
     }
@@ -53,12 +62,17 @@ public sealed partial class Shortcut
             DriveType driveType = (DriveType)reader.ReadInt32();
             Console.WriteLine($"    DriveType: {driveType:X} {driveType}");
 
-            Console.WriteLine($"    DriveSerialNumber: {reader.ReadInt32()}");
-            Console.WriteLine($"    VolumeLabelOffset: {reader.ReadInt32()}");
-            Console.WriteLine($"    VolumeLabelOffsetUnicode: {reader.ReadInt32()}");
+            Console.WriteLine($"    DriveSerialNumber: {reader.ReadUInt32()}");
 
-            string data = reader.ReadString(linkFlags.HasFlag(LinkFlags.IsUnicode));
-            Console.WriteLine($"    Data: {data}");
+            uint volumeLabelOffset = reader.ReadUInt32();
+            Console.WriteLine($"    VolumeLabelOffset: {volumeLabelOffset} from begin 0x{linkInfoVolumeIDTag.Start + volumeLabelOffset:X}");
+            uint volumeLabelOffsetUnicode = reader.ReadUInt32();
+            Console.WriteLine($"    VolumeLabelOffsetUnicode: {volumeLabelOffsetUnicode} from begin 0x{linkInfoVolumeIDTag.Start + volumeLabelOffsetUnicode:X}");
+
+            //string data = reader.ReadString(linkFlags.HasFlag(LinkFlags.IsUnicode));
+            //Console.WriteLine($"    Data: {data}");
+
+            reader.Position += (int)(linkInfoVolumeIDTag.Size - 5 * 4);
         }
     }
 

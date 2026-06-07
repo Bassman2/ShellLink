@@ -2,20 +2,20 @@
 
 internal static class Assert
 {
-    //public static void StartTag(string name, int start, int size)
+    //public static void StartTag(string name, int Start, int size)
     //{
     //    Console.ForegroundColor = ConsoleColor.Blue;
     //    Console.WriteLine();
-    //    Console.WriteLine($"{name} (Start: 0x{start:X}, Size: 0x{size:X})");
+    //    Console.WriteLine($"{name} (Start: 0x{Start:X}, Size: 0x{size:X})");
     //    Console.ResetColor();
     //}
 
-    //public static void EndTag(string name, int start, int size, int end, int offset = 0)
+    //public static void EndTag(string name, int Start, int size, int end, int offset = 0)
     //{
-    //    int calc = start + size + offset;
+    //    int calc = Start + size + offset;
     //    Console.ForegroundColor = ConsoleColor.Blue;
     //    Console.WriteLine($"{name} End (Calc: 0x{calc:X}, Position: 0x{end:X})");
-    //    if (start + size + offset != end)
+    //    if (Start + size + offset != end)
     //    {
     //        Console.ForegroundColor = ConsoleColor.Red;
     //        Console.Error.WriteLine($"Error: Invalid {name} Size, Calc 0x{calc:X} does not match Position: 0x{end:X}");
@@ -23,14 +23,14 @@ internal static class Assert
     //    Console.ResetColor();
     //}
 
-    //public static void StartTag2(string name, int start, int size)
+    //public static void StartTag2(string name, int Start, int size)
     //{
-    //    StartTag("  " + name, start, size);
+    //    StartTag("  " + name, Start, size);
     //}
 
-    //public static void EndTag2(string name, int start, int size, int end, int offset = 0)
+    //public static void EndTag2(string name, int Start, int size, int end, int offset = 0)
     //{
-    //    EndTag("  " + name, start, size, end, offset);
+    //    EndTag("  " + name, Start, size, end, offset);
     //}
 
     public static void Equal(string name, object value, object expected)
