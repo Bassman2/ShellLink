@@ -1,6 +1,5 @@
 ﻿
 using ShellLink.Internal;
-using System.Reflection.PortableExecutable;
 using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("ShellLinkAnalyser")]
@@ -11,8 +10,6 @@ namespace ShellLink;
 
 public sealed partial class Shortcut
 {
-    
-
     private Shortcut()
     {
         // Private constructor to prevent direct instantiation

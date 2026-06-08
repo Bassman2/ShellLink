@@ -5,7 +5,7 @@ namespace ShellLink;
 public sealed partial class Shortcut
 {
     private LinkInfoFlags linkInfoFlags;
-    private int linkInfoHeadersize;
+    private uint linkInfoHeadersize;
 
     private void AnalyseLinkInfo(BinaryReader reader)
     {
@@ -72,7 +72,7 @@ public sealed partial class Shortcut
             //string data = reader.ReadString(linkFlags.HasFlag(LinkFlags.IsUnicode));
             //Console.WriteLine($"    Data: {data}");
 
-            reader.Position += (int)(linkInfoVolumeIDTag.Size - 5 * 4);
+            reader.Position += linkInfoVolumeIDTag.Size - 5 * 4;
         }
     }
 

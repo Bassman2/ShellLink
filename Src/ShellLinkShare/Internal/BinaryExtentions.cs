@@ -8,18 +8,18 @@ internal static class BinaryExtentions
 
     extension(BinaryReader reader)
     {
-        public int Position
+        public uint Position
         {
-            get => (int)reader.BaseStream.Position;
+            get => (uint)reader.BaseStream.Position;
             set => reader.BaseStream.Position = value;
         }
     }
 
     extension(BinaryWriter writer)
     {
-        public int Position
+        public uint Position
         {
-            get => (int)writer.BaseStream.Position;
+            get => (uint)writer.BaseStream.Position;
             set => writer.BaseStream.Position = value;
         }
     }

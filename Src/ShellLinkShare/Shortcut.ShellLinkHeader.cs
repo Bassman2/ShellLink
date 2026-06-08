@@ -1,4 +1,5 @@
 ﻿using ShellLink.Internal;
+using System.Reflection.PortableExecutable;
 
 namespace ShellLink;
 
@@ -83,10 +84,7 @@ public sealed partial class Shortcut
         Int32 reserved2 = reader.ReadInt32();
         Int32 reserved3 = reader.ReadInt32();
 
-        if (reader.Position != ShellLinkHeaderSize)
-        {
-            throw new ShortcutException("Failed to read ShellLinkHeader");
-        }
+        ShortcutException.ThrowIfWrongReadPosition("ShellLinkHeader", reader.Position, ShellLinkHeaderSize);
     }
 
     private void WriteShellLinkHeader(BinaryWriter writer)
@@ -107,9 +105,7 @@ public sealed partial class Shortcut
         writer.Write((Int32)0);
         writer.Write((Int32)0);
 
-        if (writer.Position != ShellLinkHeaderSize)
-        {
-            throw new ShortcutException("Failed to write ShellLinkHeader");
-        }
+        ShortcutException.ThrowIfWrongWritePosition("ShellLinkHeader", writer.Position, ShellLinkHeaderSize);
+
     }
 }

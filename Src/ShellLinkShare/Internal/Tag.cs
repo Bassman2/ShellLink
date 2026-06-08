@@ -11,7 +11,7 @@ internal sealed class ExtraTag : IDisposable
     {
         this.reader = reader;
         this.name = name;
-        this.Start = (uint)reader.Position - 8;
+        this.Start = reader.Position - 8;
         this.Size = size;
 
         Console.ForegroundColor = ConsoleColor.Blue;
@@ -38,7 +38,7 @@ internal sealed class OpenTag : IDisposable
 {
     private readonly BinaryReader reader;
     private readonly string name;
-    public readonly int Start;
+    public readonly uint Start;
 
     public OpenTag(BinaryReader reader, string name)
     {
@@ -53,7 +53,7 @@ internal sealed class OpenTag : IDisposable
 
     public void Dispose()
     {
-        int end = reader.Position;
+        uint end = reader.Position;
         
         Console.ForegroundColor = ConsoleColor.Blue;
         Console.WriteLine($"{name} End (Position: 0x{end:X})");
@@ -67,8 +67,8 @@ internal abstract class Tag : IDisposable
     private readonly string name;
     private readonly int offset;
 
-    public readonly int Start;
-    public readonly int Size;
+    public readonly uint Start;
+    public readonly uint Size;
 
     public Tag(BinaryReader reader, string name, int offset = 0)
     {
@@ -83,12 +83,12 @@ internal abstract class Tag : IDisposable
         Console.ResetColor();
     }
 
-    protected abstract int GetSize();
+    protected abstract uint GetSize();
     
     public void Dispose()
     {
-        int end = reader.Position;
-        int calc = Start + Size + offset;
+        uint end = reader.Position;
+        uint calc = (uint)(Start + Size + offset);
         Console.ForegroundColor = ConsoleColor.Blue;
         Console.WriteLine($"{name} End (Calc: 0x{calc:X}, Position: 0x{end:X})");
         if (calc != end)
@@ -102,10 +102,10 @@ internal abstract class Tag : IDisposable
 
 internal class Size16Tag(BinaryReader reader, string name, int offset = 0) : Tag(reader, name, offset)
 {
-    protected override int GetSize() => reader.ReadInt16();
+    protected override uint GetSize() => reader.ReadUInt16();
 }
 
 internal class Size32Tag(BinaryReader reader, string name, int offset = 0) : Tag(reader, name, offset)
 {
-    protected override int GetSize() => reader.ReadInt32();
+    protected override uint GetSize() => reader.ReadUInt32();
 }

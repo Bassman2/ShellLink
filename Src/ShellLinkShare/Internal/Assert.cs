@@ -58,7 +58,7 @@ internal static class Assert
         if (!value.Equals(expected))
         {
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.Error.WriteLine($"Error: {name} is {value} instead of expected {expected}");
+            Console.Error.WriteLine($"Error: {name} is 0x{value:X} instead of expected 0x{expected:X}");
             Console.ResetColor();
         }
     }

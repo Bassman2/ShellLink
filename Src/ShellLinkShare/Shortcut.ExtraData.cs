@@ -31,6 +31,7 @@ public sealed partial class Shortcut
     private const uint TrackerDataBlockSize = 0x00000060;
     private const uint VistaAndAboveIDListDataBlockSize = 0x0000000A;
 
+    private const uint PropertyStoreDataBlockSignatureVersion = 0x53505331;
     private void AnalyseExtraData(BinaryReader reader)
     {
         using var _ = new OpenTag(reader, "ExtraData");
@@ -50,42 +51,42 @@ public sealed partial class Shortcut
                 {
                     using var tag = new ExtraTag(reader, "  ConsoleDataBlock", blockSize);
                     Assert.Equal("ConsoleDataBlockSize", blockSize, ConsoleDataBlockSize);
-                    reader.Position += (int)(blockSize - 8);
+                    reader.Position += blockSize - 8;
                 }
                 break;
             case ConsoleFEDataBlockSignature:
                 {
                     using var tag = new ExtraTag(reader, "  ConsoleFEDataBlock", blockSize);
                     Assert.Equal("ConsoleFEDataBlockSize", blockSize, ConsoleFEDataBlockSize);
-                    reader.Position += (int)(blockSize - 8);
+                    reader.Position += blockSize - 8;
                 }
                 break;
             case DarwinDataBlockSignature:
                 {
                     using var tag = new ExtraTag(reader, "  DarwinDataBlock", blockSize);
                     Assert.Equal("DarwinDataBlockSize", blockSize, DarwinDataBlockSize);
-                    reader.Position += (int)(blockSize - 8);
+                    reader.Position += blockSize - 8;
                 }
                 break;
             case EnvironmentVariableDataBlockSignature:
                 { 
                     using var tag = new ExtraTag(reader, "  EnvironmentVariableDataBlock", blockSize);
                     Assert.Equal("EnvironmentVariableDataBlockSize", blockSize, EnvironmentVariableDataBlockSize);
-                    reader.Position += (int)(blockSize - 8);
+                    reader.Position += blockSize - 8;
                 }
                 break;
             case IconEnvironmentDataBlockSignature:
                 {
                     using var tag = new ExtraTag(reader, "  IconEnvironmentDataBlock", blockSize);
                     Assert.Equal("IconEnvironmentDataBlockSize", blockSize, IconEnvironmentDataBlockSize);
-                    reader.Position += (int)(blockSize - 8);
+                    reader.Position += blockSize - 8;
                 }
                 break;
             case KnownFolderDataBlockSignature:
                 {
                     using var tag = new ExtraTag(reader, "  KnownFolderDataBlock", blockSize);
                     Assert.Equal("KnownFolderDataBlockSize", blockSize, KnownFolderDataBlockSize);
-                    reader.Position += (int)(blockSize - 8);
+                    reader.Position += blockSize - 8;
                 }
                 break;
             case PropertyStoreDataBlockSignature:
@@ -105,25 +106,27 @@ public sealed partial class Shortcut
                         {
                             break;
                         }
-                        Console.WriteLine($"  Version: 0x{reader.ReadUInt32():X}");
+                        uint version = reader.ReadUInt32();
+                        Console.WriteLine($"  Version: 0x{version:X}");
+                        Assert.Equal("Version", version, PropertyStoreDataBlockSignatureVersion);
                         Console.WriteLine($"  Format ID: {reader.ReadGuid()}");
                     }
 
-                    reader.Position += (int)(blockSize - 8 - 4);
+                    //reader.Position += blockSize - 8 - 4;
                 }
                 break;
             case ShimDataBlockSignature:
                 {
                     using var tag = new ExtraTag(reader, "  ShimDataBlock", blockSize);
                     Assert.Equal("ShimDataBlockSize", blockSize, ShimDataBlockSize);
-                    reader.Position += (int)(blockSize - 8);
+                    reader.Position += blockSize - 8;
                 }
                 break;
             case SpecialFolderDataBlockSignature:
                 {
                     using var tag = new ExtraTag(reader, "  SpecialFolderDataBlock", blockSize);
                     Assert.Equal("SpecialFolderDataBlockSize", blockSize, SpecialFolderDataBlockSize);
-                    reader.Position += (int)(blockSize - 8);
+                    reader.Position += blockSize - 8;
                 }
                 break;
             case TrackerDataBlockSignature:
@@ -149,7 +152,7 @@ public sealed partial class Shortcut
                 {
                     using var tag = new ExtraTag(reader, "  VistaAndAboveIDListDataBlock", blockSize);
                     Assert.Equal("VistaAndAboveIDListDataBlockSize", blockSize, VistaAndAboveIDListDataBlockSize);
-                    reader.Position += (int)(blockSize - 8);
+                    reader.Position += blockSize - 8;
                 }
                 break;
             }
