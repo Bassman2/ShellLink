@@ -1,4 +1,5 @@
 ﻿using ShellLink.Internal;
+using System.Reflection.PortableExecutable;
 
 namespace ShellLink;
 
@@ -116,6 +117,54 @@ public sealed partial class Shortcut
 
     private void WriteLinkInfo(BinaryWriter writer)
     {
+        uint linkInfoHeaderSize = (uint)(
+            4 +                     // LinkInfoHeaderSize
+            4 +                     // LinkInfoFlags
+            4 +                     // VolumeIDOffset
+            4 +                     // LocalBasePathOffset
+            4 +                     // CommonNetworkRelativeLinkOffset
+            4 +                     // CommonPathSuffixOffset
+            (IsUnicode ? 4 : 0) +   // LocalBasePathOffsetUnicode,
+            (IsUnicode ? 4 : 0));   // CommonPathSuffixOffsetUnicode
+
+        uint volumeIDSize = (uint)(linkInfoFlags.HasFlag(LinkInfoFlags.VolumeIDAndLocalBasePath) ?
+            4 +                     // DriveType
+            4 +                     // DriveSerialNumber
+            4 +                     // VolumeLabelOffset
+            4 +                     // VolumeLabelOffsetUnicode
+            0 : 0);
+
+        uint linkInfoSize = 
+            4 +                     // LinkInfoSize
+            linkInfoHeaderSize +
+            volumeIDSize +          // volumeID
+            4 +
+            0 ;
+
+        writer.Write(linkInfoSize);
+
+
+
+        //using var linkInfoTag = new Size32Tag(reader, "LinkInfo");
+
+        //AnalyseLinkInfoHeader(reader);
+        //AnalyseLinkInfoVolumeID(reader);
+
+        //Console.WriteLine($"  LocalBasePate: {reader.ReadNullTerminatedString()}");
+
+        //AnalyseLinkInfoCommonNetworkRelativeLink(reader);
+
+        //Console.WriteLine($"  CommonPathSuffix: {reader.ReadNullTerminatedString()}");
+
+        //if (linkInfoHeadersize >= 0x24)
+        //{
+        //    Console.WriteLine($"  LocalBasePathUnicode: {reader.ReadNullTerminatedUnicodeString()}");
+        //    Console.WriteLine($"  CommonPathSuffixUnicode: {reader.ReadNullTerminatedUnicodeString()}");
+        //}
+
+        if (linkInfoFlags.HasFlag(LinkInfoFlags.VolumeIDAndLocalBasePath))
+        {
+        }
         if (linkInfoFlags.HasFlag(LinkInfoFlags.CommonNetworkRelativeLinkAndPathSuffix))
         {
         }

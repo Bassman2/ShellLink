@@ -7,4 +7,7 @@
     <Project Path="Src/ShellLink100/ShellLink100.csproj" Id="5a141d47-674e-4e9e-aeb9-5ed7aa6aa333" />
     <Project Path="Src/ShellLinkShare/ShellLinkShare.shproj" Id="cb09c5a6-b436-4a62-beb7-dd8cf891886a" />
   </Folder>
+  <Folder Name="/Test/">
+    <Project Path="Test/ShellLinkTest/ShellLinkTest.csproj" Id="aa788e4a-4aa3-448a-843c-cf0a36b5c28a" />
+  </Folder>
 </Solution>

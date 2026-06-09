@@ -80,6 +80,10 @@ public sealed partial class Shortcut
         WriteExtraData(writer);
     }
 
+    public bool IsUnicode { get; set; }
+
+    public FileAttributes FileAttributes { get; set; } = FileAttributes.Normal;
+
     public string? FullName { get; private set; }
 
 
