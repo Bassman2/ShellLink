@@ -113,6 +113,15 @@ internal static class BinaryExtentions
         return new string(chars.ToArray());
     }
 
+    public static void WriteNullTerminatedString(this BinaryWriter writer, string? str)
+    {
+        if (str != null)
+        {
+            writer.Write(str.ToCharArray());
+        }
+        writer.Write((byte)0);
+    }
+
     public static string ReadNullTerminatedUnicodeString(this BinaryReader reader)
     {
         var chars = new List<char>();

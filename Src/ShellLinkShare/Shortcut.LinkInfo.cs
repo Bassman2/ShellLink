@@ -118,28 +118,29 @@ public sealed partial class Shortcut
     private void WriteLinkInfo(BinaryWriter writer)
     {
         uint linkInfoHeaderSize = (uint)(
-            4 +                     // LinkInfoHeaderSize
-            4 +                     // LinkInfoFlags
-            4 +                     // VolumeIDOffset
-            4 +                     // LocalBasePathOffset
-            4 +                     // CommonNetworkRelativeLinkOffset
-            4 +                     // CommonPathSuffixOffset
-            (IsUnicode ? 4 : 0) +   // LocalBasePathOffsetUnicode,
-            (IsUnicode ? 4 : 0));   // CommonPathSuffixOffsetUnicode
+            4 +                             // LinkInfoHeaderSize
+            4 +                             // LinkInfoFlags
+            4 +                             // VolumeIDOffset
+            4 +                             // LocalBasePathOffset
+            4 +                             // CommonNetworkRelativeLinkOffset
+            4 +                             // CommonPathSuffixOffset
+            (IsUnicode ? 4 : 0) +           // LocalBasePathOffsetUnicode,
+            (IsUnicode ? 4 : 0));           // CommonPathSuffixOffsetUnicode
 
         uint volumeIDSize = (uint)(linkInfoFlags.HasFlag(LinkInfoFlags.VolumeIDAndLocalBasePath) ?
-            4 +                     // DriveType
-            4 +                     // DriveSerialNumber
-            4 +                     // VolumeLabelOffset
-            4 +                     // VolumeLabelOffsetUnicode
+            4 +                             // DriveType
+            4 +                             // DriveSerialNumber
+            4 +                             // VolumeLabelOffset
+            4 +                             // VolumeLabelOffsetUnicode
             0 : 0);
 
-        uint linkInfoSize = 
-            4 +                     // LinkInfoSize
+        uint linkInfoSize = (uint)(
+            4 +                             // LinkInfoSize
             linkInfoHeaderSize +
-            volumeIDSize +          // volumeID
+            TargetPath?.Length ?? 0 + 1 +   // LocalBasePath
+            volumeIDSize +                  // volumeID
             4 +
-            0 ;
+            0);
 
         writer.Write(linkInfoSize);
 
@@ -165,6 +166,9 @@ public sealed partial class Shortcut
         if (linkInfoFlags.HasFlag(LinkInfoFlags.VolumeIDAndLocalBasePath))
         {
         }
+
+        writer.WriteNullTerminatedString(TargetPath); // LocalBasePath
+        
         if (linkInfoFlags.HasFlag(LinkInfoFlags.CommonNetworkRelativeLinkAndPathSuffix))
         {
         }
