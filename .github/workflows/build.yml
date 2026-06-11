@@ -13,7 +13,7 @@ on:
 jobs:
   buildWindows:
     name: Windows Build
-    runs-on: windows-latest
+    runs-on: windows-2025-vs2026
     environment: sign
     env:
       Solution: ${{ github.event.repository.name }}.slnx
