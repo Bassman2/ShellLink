@@ -44,6 +44,8 @@ jobs:
 #    - name: Build Release
 #      run: dotnet build ${{ env.Solution }} -c Release --no-restore
 
+    - name: Add msbuild to PATH
+      uses: microsoft/setup-msbuild@v3
 
     - name: Build Debug
       run: msbuild ${{ env.Solution }} -property:Configuration=Debug
