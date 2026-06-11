@@ -21,7 +21,7 @@
      </dependencies>
   </metadata>
   <files>
-    <file src="..\Src\Shortcut100\bin\Release\net10.0-windows\**" target="lib/net10.0" />
+    <file src="..\Src\ShellLink100\bin\Release\net10.0-windows\**" target="lib/net10.0" />
     <file src="..\README.md" target="docs\" />
     <file src="..\LICENSE" target="content" />
   </files>
