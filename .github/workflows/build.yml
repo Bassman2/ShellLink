@@ -38,11 +38,18 @@ jobs:
     - name: Dotnet restore dependencies
       run: dotnet restore ${{ env.Solution }}
 
+#    - name: Build Debug
+#      run: dotnet build ${{ env.Solution }} -c Debug --no-restore
+
+#    - name: Build Release
+#      run: dotnet build ${{ env.Solution }} -c Release --no-restore
+
+
     - name: Build Debug
-      run: dotnet build ${{ env.Solution }} -c Debug --no-restore
+      run: msbuild ${{ env.Solution }} -property:Configuration=Debug
 
     - name: Build Release
-      run: dotnet build ${{ env.Solution }} -c Release --no-restore
+      run: msbuild ${{ env.Solution }} -property:Configuration=Release
 
     - name: Nuget pack nuspec
       working-directory: Nuget
