@@ -11,7 +11,7 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)CommonNetworkRelativeLinkFlags.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DriveType.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)HotKeyFlags.cs" />
+    <Compile Include="..\ShellLinkShare\HotKeyModifierKeys.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HotKeys.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Internal\BinaryExtentions.cs" />
     <Compile Include="..\ShellLinkShare\FileAttributesFlags.cs" />

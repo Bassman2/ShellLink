@@ -1,7 +1,7 @@
 ﻿namespace ShellLink;
 
 [Flags]
-public enum HotKeyFlags : byte
+public enum HotKeyModifierKeys : Byte
 {
     None = 0x00,
     Shift = 0x01,

@@ -8,21 +8,15 @@ public sealed partial class Shortcut
     private const uint ShellLinkHeaderSize = 0x4C;
     private readonly Guid ShellLinkCLSID = new("00021401-0000-0000-C000-000000000046");
 
-
     private LinkFlags linkFlags;
     private FileAttributesFlags fileAttributes;
 
-    private ShowCommand showCommand;
-
     private uint fileSize;
-    private int iconIndex;
-
+    
     private DateTime? creationTime;
     private DateTime? accessTime;
     private DateTime? writeTime;
-
-    private ushort hotKey;
-
+    
     private void AnalyseShellLinkHeader(BinaryReader reader)
     {
         using var shellLinkHeaderTag = new Size32Tag(reader, "AnalyseShellLinkHeader");
@@ -44,18 +38,21 @@ public sealed partial class Shortcut
         Console.WriteLine($"  WriteTime: {reader.ReadFileTimeString()}");
         Console.WriteLine($"  FileSize: 0x{reader.ReadInt32():X}");
 
-        Console.WriteLine($"  IconIndex: {reader.ReadInt32()}");
+        IconIndex = reader.ReadInt32();
+        Console.WriteLine($"  IconIndex: {IconIndex}");
 
-        showCommand = (ShowCommand)reader.ReadInt32();
-        Console.WriteLine($"  ShowCommand: {showCommand}");
+        ShowCommand = (ShowCommand)reader.ReadUInt32();
+        Console.WriteLine($"  ShowCommand: {ShowCommand}");
 
-        HotKeys hotKeys = (HotKeys)reader.ReadByte();
-        HotKeyFlags hotKeyFlags = (HotKeyFlags)reader.ReadByte();
-        Console.WriteLine($"  HotKey: {hotKeys} {hotKeyFlags.ToFlagsString()}");
+        HotKey = (HotKeys)reader.ReadByte();
+        HotKeyModifiers = (HotKeyModifierKeys)reader.ReadByte();
+        Console.WriteLine($"  HotKey: 0x{HotKey:X} {HotKey.ToFlagsString()} 0x{HotKeyModifiers:X} {HotKeyModifiers.ToFlagsString()}");
 
         Console.WriteLine($"  Reserved1: {reader.ReadInt16()}");
         Console.WriteLine($"  Reserved2: {reader.ReadInt32()}");
         Console.WriteLine($"  Reserved3: {reader.ReadInt32()}");
+
+        ShortcutException.ThrowIfWrongReadPosition("ShellLinkHeader", reader.Position, ShellLinkHeaderSize);
     }
 
     private void ReadShellLinkHeader(BinaryReader reader)
@@ -72,9 +69,10 @@ public sealed partial class Shortcut
         accessTime = reader.ReadFileTime();
         writeTime = reader.ReadFileTime();
         fileSize = reader.ReadUInt32();
-        iconIndex = reader.ReadInt32();
-        showCommand = (ShowCommand)reader.ReadInt32();
-        hotKey = reader.ReadUInt16();
+        IconIndex = reader.ReadInt32();
+        ShowCommand = (ShowCommand)reader.ReadUInt32();
+        HotKey = (HotKeys)reader.ReadByte();
+        HotKeyModifiers = (HotKeyModifierKeys)reader.ReadByte();
         UInt16 reserved1 = reader.ReadUInt16();
         UInt32 reserved2 = reader.ReadUInt32();
         UInt32 reserved3 = reader.ReadUInt32();
@@ -92,9 +90,9 @@ public sealed partial class Shortcut
         writer.Write(accessTime);
         writer.Write(writeTime);
         writer.Write(fileSize);
-        writer.Write(iconIndex);
-        writer.Write((uint)showCommand);
-        writer.Write(hotKey);
+        writer.Write(IconIndex);
+        writer.Write((uint)ShowCommand);
+        writer.Write((ushort)((ushort)HotKey | (ushort)HotKeyModifiers));
         writer.Write((UInt16)0);
         writer.Write((UInt32)0);
         writer.Write((UInt32)0);

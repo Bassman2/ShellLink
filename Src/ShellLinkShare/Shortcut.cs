@@ -74,20 +74,10 @@ public sealed partial class Shortcut
                 
             );
 
-        //Directory
-        //if (linkFlags == LinkFlags.HasName)
-
-        //fileAttributes = 
-        //    (FileAttributes)(0
-        //        | FileAttributes.Normal
-
-        fileAttributes = 0;
-
         if (Directory.Exists(TargetPath))
         {
-            fileAttributes |= FileAttributesFlags.Directory;
-
             var dirInfo = new DirectoryInfo(TargetPath);
+            fileAttributes = (FileAttributesFlags)dirInfo.Attributes;
             creationTime = dirInfo.CreationTimeUtc;
             accessTime = dirInfo.LastAccessTimeUtc; 
             writeTime = dirInfo.LastWriteTimeUtc;
@@ -95,9 +85,9 @@ public sealed partial class Shortcut
         }
         else if (File.Exists(TargetPath))
         {
-            fileAttributes |= FileAttributesFlags.Directory;
 
             var fileInfo = new FileInfo(TargetPath);
+            fileAttributes = (FileAttributesFlags)fileInfo.Attributes;
             creationTime = fileInfo.CreationTimeUtc;
             accessTime = fileInfo.LastAccessTimeUtc;
             writeTime = fileInfo.LastWriteTimeUtc;
@@ -108,8 +98,7 @@ public sealed partial class Shortcut
         {
             ShortcutException.ThrowException($"TargetPath '{TargetPath}' does not exist.");
         }
-
-         
+                
         
         WriteShellLinkHeader(writer);
         WriteLinkTargetIDList(writer);
@@ -136,6 +125,13 @@ public sealed partial class Shortcut
 
     public string? IconLocation { get; set; }
 
+    public int IconIndex { get; set; }
+
+    private ShowCommand ShowCommand { get; set; } = ShowCommand.ShowNormal;
+
+    private HotKeys HotKey { get; set; } = HotKeys.None;
+
+    private HotKeyModifierKeys HotKeyModifiers { get; set; } = HotKeyModifierKeys.None;
 
     public string? RelativePath { get;  set; }
 
