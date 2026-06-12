@@ -14,7 +14,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)HotKeyFlags.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HotKeys.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Internal\BinaryExtentions.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)FileAttributes.cs" />
+    <Compile Include="..\ShellLinkShare\FileAttributesFlags.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Internal\Assert.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Internal\FlagsExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Internal\Tag.cs" />

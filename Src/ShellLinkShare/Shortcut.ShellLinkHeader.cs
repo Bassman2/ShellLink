@@ -10,7 +10,8 @@ public sealed partial class Shortcut
 
 
     private LinkFlags linkFlags;
-    
+    private FileAttributesFlags fileAttributes;
+
     private ShowCommand showCommand;
 
     private uint fileSize;
@@ -32,11 +33,11 @@ public sealed partial class Shortcut
         Console.WriteLine($"  LinkCLSID: {linkCLSID}");
         Assert.Equal("LinkCLSID", linkCLSID, ShellLinkCLSID);
 
-        linkFlags = (LinkFlags)reader.ReadInt32();
+        linkFlags = (LinkFlags)reader.ReadUInt32();
         Console.WriteLine($"  LinkFlags: 0x{linkFlags:X}{linkFlags.ToDetailedString()}");
 
-        FileAttributes = (FileAttributes)reader.ReadInt32();
-        Console.WriteLine($"  FileAttributes: 0x{FileAttributes:X}{FileAttributes.ToDetailedString()}");
+        fileAttributes = (FileAttributesFlags)reader.ReadUInt32();
+        Console.WriteLine($"  FileAttributes: 0x{fileAttributes:X}{fileAttributes.ToDetailedString()}");
 
         Console.WriteLine($"  CreationTime: {reader.ReadFileTimeString()}");
         Console.WriteLine($"  AccessTime: {reader.ReadFileTimeString()}");
@@ -65,8 +66,8 @@ public sealed partial class Shortcut
         Guid linkCLSID = reader.ReadGuid();
         ShortcutException.ThrowIfNotEqual("ShellLinkHeader", "LinkCLSID", linkCLSID, ShellLinkCLSID);
         
-        linkFlags = (LinkFlags)reader.ReadInt32();
-        FileAttributes = (FileAttributes)reader.ReadInt32();
+        linkFlags = (LinkFlags)reader.ReadUInt32();
+        fileAttributes = (FileAttributesFlags)reader.ReadUInt32();
         creationTime = reader.ReadFileTime();
         accessTime = reader.ReadFileTime();
         writeTime = reader.ReadFileTime();
@@ -86,7 +87,7 @@ public sealed partial class Shortcut
         writer.Write(ShellLinkHeaderSize);      // fix header size
         writer.Write(ShellLinkCLSID);           // fix CLSID
         writer.Write((uint)linkFlags);
-        writer.Write((uint)FileAttributes);
+        writer.Write((uint)fileAttributes);
         writer.Write(creationTime);
         writer.Write(accessTime);
         writer.Write(writeTime);

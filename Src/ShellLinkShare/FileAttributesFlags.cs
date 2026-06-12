@@ -1,7 +1,7 @@
 ﻿namespace ShellLink;
 
 [Flags]
-public enum FileAttributes : uint
+public enum FileAttributesFlags : uint
 {
     None = 0x0000,
     Readonly = 0x0001,

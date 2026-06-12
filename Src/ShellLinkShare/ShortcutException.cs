@@ -4,24 +4,24 @@ namespace ShellLink;
 
 public class ShortcutException : ApplicationException
 {
-    public ShortcutException() : base()
+    internal ShortcutException() : base()
     { }
 
-    public ShortcutException(string message) : base(message)
+    internal ShortcutException(string message) : base(message)
     { }
 
-    public ShortcutException(string message, Exception innerException) : base(message, innerException)
+    internal ShortcutException(string message, Exception innerException) : base(message, innerException)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(message, "message");
     }
 
     [DoesNotReturn]
-    private static void ThrowException(string message)
+    internal static void ThrowException(string message)
     {
         throw new ArgumentException(message);
     }
 
-    public static void ThrowIfWrongReadPosition(string tagName, uint position, uint expectedPosition)
+    internal static void ThrowIfWrongReadPosition(string tagName, uint position, uint expectedPosition)
     {
         if (position != expectedPosition)
         {
@@ -29,7 +29,7 @@ public class ShortcutException : ApplicationException
         }
     }
 
-    public static void ThrowIfWrongWritePosition(string tagName, uint position, uint expectedPosition)
+    internal static void ThrowIfWrongWritePosition(string tagName, uint position, uint expectedPosition)
     {
         if (position != expectedPosition)
         {
@@ -37,7 +37,7 @@ public class ShortcutException : ApplicationException
         }
     }
 
-    public static void ThrowIfNotEqual(string tagName, string parameterName,uint value, uint expected)
+    internal static void ThrowIfNotEqual(string tagName, string parameterName,uint value, uint expected)
     {
         if (value != expected)
         {
@@ -45,7 +45,7 @@ public class ShortcutException : ApplicationException
         }
     }
 
-    public static void ThrowIfNotEqual(string tagName, string parameterName, Guid value, Guid expected)
+    internal static void ThrowIfNotEqual(string tagName, string parameterName, Guid value, Guid expected)
     {
         if (value != expected)
         {

@@ -1,5 +1,6 @@
 ﻿
 using ShellLink.Internal;
+using System.Runtime;
 using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("ShellLinkAnalyser")]
@@ -73,6 +74,42 @@ public sealed partial class Shortcut
                 
             );
 
+        //Directory
+        //if (linkFlags == LinkFlags.HasName)
+
+        //fileAttributes = 
+        //    (FileAttributes)(0
+        //        | FileAttributes.Normal
+
+        fileAttributes = 0;
+
+        if (Directory.Exists(TargetPath))
+        {
+            fileAttributes |= FileAttributesFlags.Directory;
+
+            var dirInfo = new DirectoryInfo(TargetPath);
+            creationTime = dirInfo.CreationTimeUtc;
+            accessTime = dirInfo.LastAccessTimeUtc; 
+            writeTime = dirInfo.LastWriteTimeUtc;
+            fileSize = 0;
+        }
+        else if (File.Exists(TargetPath))
+        {
+            fileAttributes |= FileAttributesFlags.Directory;
+
+            var fileInfo = new FileInfo(TargetPath);
+            creationTime = fileInfo.CreationTimeUtc;
+            accessTime = fileInfo.LastAccessTimeUtc;
+            writeTime = fileInfo.LastWriteTimeUtc;
+            fileSize = (uint)fileInfo.Length;
+        }
+        else
+        {
+            ShortcutException.ThrowException($"TargetPath '{TargetPath}' does not exist.");
+        }
+
+         
+        
         WriteShellLinkHeader(writer);
         WriteLinkTargetIDList(writer);
         WriteLinkInfo(writer);
@@ -82,7 +119,7 @@ public sealed partial class Shortcut
 
     public bool IsUnicode { get; set; }
 
-    public FileAttributes FileAttributes { get; set; } = FileAttributes.Normal;
+    //public FileAttributes FileAttributes { get; set; } = FileAttributes.Normal;
 
     public string? FullName { get; private set; }
 
