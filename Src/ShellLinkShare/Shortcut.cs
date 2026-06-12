@@ -101,7 +101,8 @@ public sealed partial class Shortcut
             creationTime = fileInfo.CreationTimeUtc;
             accessTime = fileInfo.LastAccessTimeUtc;
             writeTime = fileInfo.LastWriteTimeUtc;
-            fileSize = (uint)fileInfo.Length;
+            //  If the link target file is larger than 0xFFFFFFFF, this value specifies the least significant 32 bits of the link target file size.
+            fileSize = (uint)(fileInfo.Length & 0xFFFFFFFF);
         }
         else
         {
