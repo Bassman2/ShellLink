@@ -5,8 +5,10 @@
 
 # Documentation
 
+[Pages](https://bassman2.github.io/ShellLink)
+
 # Based on
 
-https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-shllink
+[ms-shllink](https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-shllink)
 
-https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-propstore
+[ms-propstore](https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-propstore)
