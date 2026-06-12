@@ -18,7 +18,7 @@ on:
 jobs:
   analyze:
     name: Analyze
-    runs-on: windows-latest
+    runs-on: windows-2025-vs2026
     environment: sign
     env:
       Solution: ${{ github.event.repository.name }}.slnx
@@ -39,8 +39,15 @@ jobs:
     - name: Dotnet restore dependencies
       run: dotnet restore ${{ env.Solution }}
 
+#    - name: Build Release
+#      run: dotnet build ${{ env.Solution }} -c Release --no-restore
+
+    - name: Add msbuild to PATH
+      uses: microsoft/setup-msbuild@v3
+
     - name: Build Release
-      run: dotnet build ${{ env.Solution }} -c Release --no-restore
+      run: msbuild ${{ env.Solution }} -property:Configuration=Release
+
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v4
