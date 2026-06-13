@@ -44,11 +44,11 @@ public sealed partial class Shortcut
 
     internal void Analyse(BinaryReader reader)
     {
-        AnalyseShellLinkHeader(reader);
-        AnalyseLinkTargetIDList(reader);
-        AnalyseLinkInfo(reader);
-        AnalyseStringData(reader);
-        AnalyseExtraData(reader);
+        AnalyseShellLinkHeader(reader);     // must have
+        AnalyseLinkTargetIDList(reader);    // optional
+        AnalyseLinkInfo(reader);            // optional
+        AnalyseStringData(reader);          // optional
+        AnalyseExtraData(reader);           // optional
 
         Assert.FileEnding(reader);
     }
@@ -108,8 +108,6 @@ public sealed partial class Shortcut
     }
 
     public bool IsUnicode { get; set; }
-
-    //public FileAttributes FileAttributes { get; set; } = FileAttributes.Normal;
 
     public string? FullName { get; private set; }
 
